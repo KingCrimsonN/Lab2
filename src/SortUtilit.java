@@ -10,16 +10,17 @@ public class SortUtilit {
         else comparator = Comparator.comparing(Department::getName);
         Collections.sort(list,comparator);
     }
-    public static void sortByMoney(ArrayList<Product> products, boolean byAm){
+    public static void sortByValue(ArrayList<Product> products, boolean byAmount){
         Comparator comparator;
-        if (byAm)comparator = Comparator.comparing(Product::getAmount);
+        if (byAmount)comparator = Comparator.comparing(Product::getAmount);
         else comparator = Comparator.comparing(Product::getPrice);
         Collections.sort(products,comparator);
     }
     public static void sortByAmount(ArrayList<Product> products){
-        sortByMoney(products,true);
+        sortByValue(products,true);
     }
     public static void sortByPrice(ArrayList<Product> products){
-        sortByMoney(products,false);
+        sortByValue(products,false);
     }
 }
+
