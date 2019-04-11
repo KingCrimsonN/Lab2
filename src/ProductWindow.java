@@ -77,10 +77,7 @@ public class ProductWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 if (admin) {
-                    current.setName(description.getText());
-                    current.setPrice(Integer.valueOf(price.getText()));
-                    current.setAmount((Integer) number.getValue());
-
+                    current = new Product(description.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue());
                 } else {
                 }
             }
@@ -110,6 +107,7 @@ public class ProductWindow extends JFrame {
         c.gridy = 1;
         c.weightx = 0.25;
         this.add(text, c);
+        price.setHorizontalAlignment(SwingConstants.RIGHT);
         price.setFont(font);
         price.setBackground(darkgray);
         price.setForeground(white);
@@ -140,13 +138,8 @@ public class ProductWindow extends JFrame {
         c.gridx = 1;
         c.gridy = 1;
         c.weightx = 0.75;
-        this.
-
-                add(price, c);
-
-        text = new
-
-                JLabel("Amount:");
+        this.add(price, c);
+        text = new JLabel("Amount:");
         text.setHorizontalAlignment(SwingConstants.RIGHT);
         text.setFont(font);
         text.setBackground(darkgray);
@@ -159,30 +152,14 @@ public class ProductWindow extends JFrame {
         c.gridx = 0;
         c.gridy = 2;
         c.weightx = 0.25;
-        this.
-
-                add(text, c);
+        this.add(text, c);
         number.setFont(font);
-        number.getEditor().
-
-                getComponent(0).
-
-                setBackground(darkgray);
-        number.getEditor().
-
-                getComponent(0).
-
-                setForeground(white);
+        number.getEditor().getComponent(0).setBackground(darkgray);
+        number.getEditor().getComponent(0).setForeground(white);
         number.setBorder(BorderFactory.createLineBorder(black, 4));
-        number.setMinimumSize(new
-
-                Dimension(100, 30));
-        number.setPreferredSize(new
-
-                Dimension(100, 30));
-        number.setMaximumSize(new
-
-                Dimension(100, 30));
+        number.setMinimumSize(new Dimension(100, 30));
+        number.setPreferredSize(new Dimension(100, 30));
+        number.setMaximumSize(new Dimension(100, 30));
         //localization of spinner
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.NONE;
@@ -191,9 +168,7 @@ public class ProductWindow extends JFrame {
         c.gridx = 1;
         c.gridy = 2;
         c.weightx = 0.75;
-        this.
-
-                add(number, c);
+        this.add(number, c);
         button.setFont(font);
         button.setBackground(darkgray);
         button.setForeground(white);
@@ -206,17 +181,10 @@ public class ProductWindow extends JFrame {
         c.weightx = 0.0;
         c.weighty = 0.0;
         c.anchor = GridBagConstraints.CENTER;
-        c.insets = new
-
-                Insets(20, 10, 10, 10);
-
+        c.insets = new Insets(20, 10, 10, 10);
         c.fill = GridBagConstraints.BOTH;
-        this.
-
-                add(button, c);
-        this.
-
-                update(this.getGraphics());
+        this.add(button, c);
+        this.update(this.getGraphics());
     }
 
     void setProduct(Product current) {
@@ -228,6 +196,6 @@ public class ProductWindow extends JFrame {
     }
 
     public static void main(String[] args) {
-        new ProductWindow("product");
+        ProductWindow pr = new ProductWindow("product");
     }
 }
