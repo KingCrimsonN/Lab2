@@ -4,14 +4,16 @@ public class Store {
     ArrayList<Department> departments = new ArrayList<>();
 
     public void add(String name) {
-        departments.add(new Department(name));
+        if (checkUnique(name))
+            departments.add(new Department(name));
     }
 
     public void edit(Department dep, String name) {
-        for (int i = 0; i < departments.size(); i++) {
-            if (departments.get(i).equals(dep.name))
-                departments.get(i).name = name;
-        }
+        if (checkUnique(name))
+            for (int i = 0; i < departments.size(); i++) {
+                if (departments.get(i).equals(dep.name))
+                    departments.get(i).name = name;
+            }
     }
 
     public void remove(Department dep) {
@@ -22,24 +24,32 @@ public class Store {
         return departments.get(index);
     }
 
-    public Department getDepartment(String name){
-        for (Department department:departments){
+    public Department getDepartment(String name) {
+        for (Department department : departments) {
             if (department.equals(name)) return department;
         }
         return null;
     }
 
-    public int totalPrice(){
+    public int totalPrice() {
         int[] totalPrice = {0};
-        departments.forEach(department -> totalPrice[0]+=department.groupPrice());
+        departments.forEach(department -> totalPrice[0] += department.groupPrice());
         return totalPrice[0];
     }
 
-    public ArrayList<Product> getAllProducts(){
+    public ArrayList<Product> getAllProducts() {
         ArrayList<Product> products = new ArrayList<>();
         departments.forEach(department -> products.addAll(department.getProducts()));
-        if (products.size()==0)return null;
+        if (products.size() == 0) return null;
         return products;
+    }
+
+    public boolean checkUnique(String n) {
+        for (int i = 0; i < departments.size(); i++) {
+            if (departments.get(i).equals(n))
+                return false;
+        }
+        return true;
     }
 
     public String toString() {
