@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Department {
@@ -9,14 +10,16 @@ public class Department {
     }
 
     public void add(String nName, int am, int price) {
-        products.add(new Product(nName, am, price));
+        if (checkUnique(nName))
+            products.add(new Product(nName, am, price));
     }
 
     public void edit(Product prod, String name, int val, int price) {
-        for (int i = 0; i < products.size(); i++) {
-            if (prod.name.equals(products.get(i)))
-                products.get(i).edit(name, val, price);
-        }
+        if (checkUnique(name))
+            for (int i = 0; i < products.size(); i++) {
+                if (prod.name.equals(products.get(i)))
+                    products.get(i).edit(name, val, price);
+            }
     }
 
     public void remove(Product prod) {
@@ -30,15 +33,23 @@ public class Department {
         }
         return s;
     }
-    
-    public int groupPrice(){
+
+    public int groupPrice() {
         int[] groupPrice = {0};
-        products.forEach(product -> groupPrice[0]+=product.getAmount()*product.getPrice());
+        products.forEach(product -> groupPrice[0] += product.getAmount() * product.getPrice());
         return groupPrice[0];
     }
 
     public boolean equals(String n) {
         return n.equals(name);
+    }
+
+    public boolean checkUnique(String n) {
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).equals(n))
+                return false;
+        }
+        return true;
     }
 
     public void setName(String name) {
@@ -48,6 +59,7 @@ public class Department {
     public String getName() {
         return name;
     }
+
     public ArrayList<Product> getProducts() {
         return products;
     }
