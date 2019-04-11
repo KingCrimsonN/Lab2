@@ -12,7 +12,7 @@ public class SortUtilit {
     }
     public static void sortByMoney(ArrayList<Product> products, boolean byVal){
         Comparator comparator;
-        if (byVal)comparator = Comparator.comparing(Product::getValue);
+        if (byVal)comparator = Comparator.comparing(Product::getAmount);
         else comparator = Comparator.comparing(Product::getPrice);
         Collections.sort(products,comparator);
     }
