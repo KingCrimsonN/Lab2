@@ -35,7 +35,7 @@ public class Product {
         return name;
     }
 
-    public int getValue() {
+    public int getAmount() {
         return amount;
     }
 
