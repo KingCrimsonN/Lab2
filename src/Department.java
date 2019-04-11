@@ -30,11 +30,15 @@ public class Department {
         }
         return s;
     }
+    
+    public int groupPrice(){
+        int[] groupPrice = {0};
+        products.forEach(product -> groupPrice[0]+=product.getAmount()*product.getPrice());
+        return groupPrice[0];
+    }
 
     public boolean equals(String n) {
-        if (n.equals(name))
-            return true;
-        return false;
+        return n.equals(name);
     }
 
     public void setName(String name) {
@@ -43,5 +47,8 @@ public class Department {
 
     public String getName() {
         return name;
+    }
+    public ArrayList<Product> getProducts() {
+        return products;
     }
 }
