@@ -1,13 +1,13 @@
 public class Product {
     String name;
-    int value, price;
+    int amount, price;
     Product(String nName, int val, int nPrice){
         edit(nName, val, nPrice);
     }
 
     public void edit(String nName, int val, int nPrice){
         name = nName;
-        value = val;
+        amount = val;
         price = nPrice;
     }
     public boolean equals(String n){
@@ -16,14 +16,27 @@ public class Product {
         return false;
     }
     public String toString(){
-        return name + " " + price + " " + value + "\n";
+        return name + " " + price + " " + amount + "\n";
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
     public String getName() {
         return name;
     }
 
     public int getValue() {
-        return value;
+        return amount;
     }
 
     public int getPrice() {
