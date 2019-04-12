@@ -2,10 +2,20 @@ import java.util.ArrayList;
 
 public class Store {
     ArrayList<Department> departments = new ArrayList<>();
+    ArrayList<Product> cart = new ArrayList<>();
 
     public void add(String name) {
         if (checkUnique(name))
             departments.add(new Department(name));
+    }
+
+    public void addToCart(Product p, int amm){
+        Product pCart = p;
+        if ((p.getAmount()-amm)>0) {
+            pCart.setAmount(amm);
+            p.setAmount(p.getAmount()-amm);
+            cart.add(pCart);
+        }
     }
 
     public void edit(Department dep, String name) {
