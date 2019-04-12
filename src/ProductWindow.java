@@ -11,9 +11,9 @@ public class ProductWindow extends JFrame {
     private boolean admin = true;
     private Product current;
     private JButton button;
-    private JTextArea description = new JTextArea();
     private JSpinner number;
     private JTextField price = new JTextField();
+    private JTextField nameF = new JTextField();
     private JLabel text;
     private Font font;
     private Color black = new Color(30, 28, 31);
@@ -36,25 +36,64 @@ public class ProductWindow extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
         this.getContentPane().setBackground(darkgray);
-        this.setSize(500, 300);
-        this.setResizable(false);
+        this.setSize(600, 300);
         this.getContentPane().setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        description.setFont(font);
-        description.setEditable(false);
-        description.setLineWrap(true);
-        description.setWrapStyleWord(true);
-        description.setAlignmentX(CENTER_ALIGNMENT);
-        description.setFont(font);
-        description.setBackground(gray);
-        description.setForeground(black);
-        description.setAlignmentX(CENTER_ALIGNMENT);
-        description.setAlignmentY(CENTER_ALIGNMENT);
-        description.setMinimumSize(new Dimension(0, 50));
-        description.setPreferredSize(new Dimension(0, 50));
-        description.setMaximumSize(new Dimension(0, 50));
+        text = new JLabel("Name:");
+        text.setFont(font);
+        text.setBackground(darkgray);
+        text.setForeground(white);
+        text.setHorizontalAlignment(SwingConstants.RIGHT);
+        //localization of label "Price"
+        c.anchor = GridBagConstraints.EAST;
+        c.fill = GridBagConstraints.NONE;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0.25;
+        c.weighty = 0.1;
+        this.add(text, c);
+        nameF.setHorizontalAlignment(SwingConstants.RIGHT);
+        nameF.setFont(font);
+        nameF.setBackground(darkgray);
+        nameF.setForeground(white);
+        nameF.setBorder(BorderFactory.createLineBorder(black, 4));
+        nameF.setMinimumSize(new Dimension(100, 30));
+        nameF.setPreferredSize(new Dimension(100, 30));
+        nameF.setMaximumSize(new Dimension(100, 30));
+        //localization of price field
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = 0.25;
+        this.add(nameF, c);
+
+        //adding image
+        Icon icon = new ImageIcon("pics\\torch.png");
+        button = new JButton(icon);
+        button.setMinimumSize(new Dimension(150, 150));
+        button.setPreferredSize(new Dimension(150, 150));
+        button.setMaximumSize(new Dimension(150, 150));
+        button.setFont(font);
+        button.setBackground(darkgray);
+        button.setForeground(white);
+        button.setHorizontalAlignment(SwingConstants.CENTER);
+        //localization of label "Price"
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.NONE;
+        c.gridheight = 3;
+        c.gridwidth = 1;
+        c.gridx = 2;
+        c.gridy = 0;
+        c.weightx = 0.25;
+        add(button, c);
+
         if (admin) {
-            description.setEditable(true);
+            nameF.setEditable(true);
             price.setEditable(true);
             SpinnerNumberModel spm = new SpinnerNumberModel();
             spm.setMinimum(0);
@@ -62,8 +101,8 @@ public class ProductWindow extends JFrame {
             button = new JButton("Save changes");
         } else {
             //setting description field
-            description.setEditable(false);
-            description.setText(current.getName());
+            nameF.setEditable(false);
+            nameF.setText(current.getName());
             //setting price field
             price.setEditable(false);
             price.setText("" + current.getPrice());
@@ -77,22 +116,12 @@ public class ProductWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 if (admin) {
-                    current = new Product(description.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue());
+                    current = new Product(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue());
                 } else {
+                    //TODO
                 }
             }
         });
-        //Localization of textArea
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.gridheight = 1;
-        c.weightx = 1.0;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.CENTER;
-        c.insets = new Insets(20, 10, 10, 20);
-        c.fill = GridBagConstraints.BOTH;
-        this.add(description, c);
         text = new JLabel("Price:");
         text.setFont(font);
         text.setBackground(darkgray);
@@ -106,6 +135,7 @@ public class ProductWindow extends JFrame {
         c.gridx = 0;
         c.gridy = 1;
         c.weightx = 0.25;
+        c.weighty = 0.1;
         this.add(text, c);
         price.setHorizontalAlignment(SwingConstants.RIGHT);
         price.setFont(font);
@@ -137,8 +167,9 @@ public class ProductWindow extends JFrame {
         c.gridwidth = 1;
         c.gridx = 1;
         c.gridy = 1;
-        c.weightx = 0.75;
+        c.weightx = 0.25;
         this.add(price, c);
+
         text = new JLabel("Amount:");
         text.setHorizontalAlignment(SwingConstants.RIGHT);
         text.setFont(font);
@@ -152,6 +183,7 @@ public class ProductWindow extends JFrame {
         c.gridx = 0;
         c.gridy = 2;
         c.weightx = 0.25;
+        c.weighty = 0.1;
         this.add(text, c);
         number.setFont(font);
         number.getEditor().getComponent(0).setBackground(darkgray);
@@ -167,7 +199,7 @@ public class ProductWindow extends JFrame {
         c.gridwidth = 1;
         c.gridx = 1;
         c.gridy = 2;
-        c.weightx = 0.75;
+        c.weightx = 0.25;
         this.add(number, c);
         button.setFont(font);
         button.setBackground(darkgray);
@@ -187,15 +219,16 @@ public class ProductWindow extends JFrame {
         this.update(this.getGraphics());
     }
 
+    public static void main(String[] args) {
+        ProductWindow pr = new ProductWindow("product");
+        pr.setResizable(false);
+    }
+
     void setProduct(Product current) {
         this.current = current;
     }
 
     void setAdmin(boolean admin) {
         this.admin = admin;
-    }
-
-    public static void main(String[] args) {
-        ProductWindow pr = new ProductWindow("product");
     }
 }
