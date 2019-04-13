@@ -10,8 +10,7 @@ public class Department {
     }
 
     public void add(String nName, int am, int price) {
-        if (checkUnique(nName))
-            products.add(new Product(nName, am, price));
+        products.add(new Product(nName, am, price));
     }
 
     public void edit(Product prod, String name, int val, int price) {
