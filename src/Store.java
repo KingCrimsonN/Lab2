@@ -5,15 +5,15 @@ public class Store {
     ArrayList<Product> cart = new ArrayList<>();
 
     public void add(String name) {
-        if (checkUnique(name))
-            departments.add(new Department(name));
+        departments.add(new Department(name));
     }
     
     public void addProduct(String depName, String prodName, int am, int price){
-        add(depName);
-        Department dep = getDepartment(depName);
-        if (checkUniqueProduct(prodName))
-            dep.add(prodName, am, price);
+        Department dep;
+        if (checkUnique(depName))
+            add(depName);
+        dep = getDepartment(depName);
+        dep.add(prodName, am, price);
     }
 
     public void addToCart(Product p, int amm){
