@@ -8,6 +8,13 @@ public class Store {
         if (checkUnique(name))
             departments.add(new Department(name));
     }
+    
+    public void addProduct(String depName, String prodName, int am, int price){
+        add(depName);
+        Department dep = getDepartment(depName);
+        if (checkUniqueProduct(prodName))
+            dep.add(prodName, am, price);
+    }
 
     public void addToCart(Product p, int amm){
         Product pCart = p;
@@ -59,6 +66,12 @@ public class Store {
             if (departments.get(i).equals(n))
                 return false;
         }
+        return true;
+    }
+    
+    public boolean checkUniqueProduct(String n){
+        for (Department department : departments)
+            if (!department.checkUnique) return false;
         return true;
     }
 
