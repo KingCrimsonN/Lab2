@@ -11,17 +11,16 @@ import java.io.IOException;
 public class ProductWindow extends JFrame {
     private boolean admin = true;
     private Product current;
-    private JButton button;
-    private JSpinner number;
-    private JTextField price = new JTextField();
-    private JTextField nameF = new JTextField();
     private JLabel text;
     private Font font;
     private Color black = new Color(30, 28, 31);
     private Color darkgray = new Color(86, 86, 86);
     private Color gray = new Color(155, 155, 155);
     private Color white = new Color(213, 213, 213);
-
+    private JButton button;
+    private JSpinner number;
+    private JTextField price = new JTextField();
+    private JTextField nameF = new JTextField();
 
     ProductWindow(String name) {
         super(name);
@@ -63,6 +62,8 @@ public class ProductWindow extends JFrame {
         nameF.setForeground(white);
         nameF.setBorder(BorderFactory.createLineBorder(black, 4));
         nameF.setMinimumSize(new Dimension(100, 30));
+        nameF.setPreferredSize(new Dimension(100, 30));
+
         //localization of price field
         {
             c.anchor = GridBagConstraints.WEST;
@@ -75,6 +76,7 @@ public class ProductWindow extends JFrame {
         }
         this.add(nameF, c);
         if (admin) {
+            //TODO add delete button
             nameF.setEditable(true);
             price.setEditable(true);
             SpinnerNumberModel spm = new SpinnerNumberModel();
@@ -119,6 +121,40 @@ public class ProductWindow extends JFrame {
                 c.weightx = 0.25;
             }
             this.add(image, c);
+            JButton del = new JButton("Delete Product");
+            del.setFont(font);
+            del.setBackground(darkgray);
+            del.setForeground(white);
+            del.setHorizontalAlignment(SwingConstants.CENTER);
+            del.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JFileChooser fileopen = new JFileChooser("pics");
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "png");
+                    fileopen.setFileFilter(filter);
+                    int ret = fileopen.showDialog(button, "Choose File");
+                    if (ret == JFileChooser.APPROVE_OPTION) {
+                        String filename = fileopen.getSelectedFile().getName();
+                        String extension = filename.substring(filename.lastIndexOf(".") + 1);
+                        if (!extension.equals("png")) JOptionPane.showMessageDialog(null, "Choose png file!");
+                        else {
+                            Icon icon = new ImageIcon(fileopen.getSelectedFile().getAbsolutePath());
+                            image.setIcon(icon);
+                        }
+                    }
+                }
+            });
+            //localization of button delete
+            {
+                c.anchor = GridBagConstraints.CENTER;
+                c.fill = GridBagConstraints.NONE;
+                c.gridheight = 2;
+                c.gridwidth = 1;
+                c.gridx = 2;
+                c.gridy = 3;
+                c.weightx = 0.25;
+            }
+            this.add(del, c);
             button = new JButton("Save changes");
         } else {
             //setting description field
@@ -129,7 +165,7 @@ public class ProductWindow extends JFrame {
             price.setText("" + current.getPrice());
             //setting spinner
             number = new JSpinner(new SpinnerNumberModel(0, 0, current.getAmount(), 1));
-            button = new JButton("Add to bag");
+            button = new JButton("Add to cart");
             //setting image label
             //Icon def = new ImageIcon("pics\\torch.png");//TODO set default pic
             //   text = new JLabel(def);
@@ -160,6 +196,8 @@ public class ProductWindow extends JFrame {
                     else if (nameF.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter name!");
                     else
                         current = new Product(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue());
+                    System.out.println(current);
+                    StoreWindow.addProduct(current);
                 } else {
                     //TODO
                 }
@@ -260,7 +298,7 @@ public class ProductWindow extends JFrame {
         {
             c.gridx = 0;
             c.gridy = 3;
-            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.gridwidth = admin ? 2 : GridBagConstraints.REMAINDER;
             c.gridheight = 1;
             c.weightx = 0.0;
             c.weighty = 0.0;
@@ -275,6 +313,10 @@ public class ProductWindow extends JFrame {
         Product product = new Product("Torch", 4, 40);
         ProductWindow pr = new ProductWindow("product");
         pr.setResizable(false);
+    }
+
+    Product getProduct() {
+        return current;
     }
 
     void setProduct(Product current) {
