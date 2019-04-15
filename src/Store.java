@@ -5,17 +5,15 @@ public class Store {
     ArrayList<Product> cart = new ArrayList<>();
 
     public void add(String name) {
-        if (checkUnique(name))
             departments.add(new Department(name));
     }
 
-    public void addToCart(Product p, int amm){
-        Product pCart = p;
-        if ((p.getAmount()-amm)>0) {
-            pCart.setAmount(amm);
-            p.setAmount(p.getAmount()-amm);
-            cart.add(pCart);
-        }
+    public void addProduct(String depName, String prodName, int am, int price,String img){
+        Department dep;
+        if (checkUnique(depName))
+            add(depName);
+        dep = getDepartment(depName);
+        dep.add(prodName, am, price,img);
     }
 
     public void edit(Department dep, String name) {
@@ -52,6 +50,12 @@ public class Store {
         departments.forEach(department -> products.addAll(department.getProducts()));
         if (products.size() == 0) return null;
         return products;
+    }
+
+    public boolean checkUniqueProduct(String n){
+        for (Department department : departments)
+            if (!department.checkUnique(n)) return false;
+        return true;
     }
 
     public boolean checkUnique(String n) {
