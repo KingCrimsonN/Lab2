@@ -5,15 +5,8 @@ public class Store {
     ArrayList<Product> cart = new ArrayList<>();
 
     public void add(String name) {
-        departments.add(new Department(name));
-    }
-    
-    public void addProduct(String depName, String prodName, int am, int price){
-        Department dep;
-        if (checkUnique(depName))
-            add(depName);
-        dep = getDepartment(depName);
-        dep.add(prodName, am, price);
+        if (checkUnique(name))
+            departments.add(new Department(name));
     }
 
     public void addToCart(Product p, int amm){
@@ -68,17 +61,11 @@ public class Store {
         }
         return true;
     }
-    
-    public boolean checkUniqueProduct(String n){
-        for (Department department : departments)
-            if (!department.checkUnique) return false;
-        return true;
-    }
 
     public String toString() {
         String s = "";
         for (int i = 0; i < departments.size(); i++) {
-            s += departments.get(i).toString();
+            s += departments.get(i).toSaveString();
         }
         return s;
     }
