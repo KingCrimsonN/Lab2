@@ -57,26 +57,26 @@ public class FileInput {
                         String nam="";
                         for (int i=3;i<s.length();i++)
                             nam+=s.charAt(i);
-                        st.add(new Department(nam));
+                        st.add(nam);
                         depNum++;
                     }
                     else {
                         String nam="";
-                        String temp="";
+                        String temp="a";
+                        String image="";
                         int val=-1,price=-1;
                         StringTokenizer tkn = new StringTokenizer(s);
-                        while (val==-1) {
+                        while (!checkNum(temp)) {
                             temp = tkn.nextToken();
                             if (!checkNum(temp))
-                                nam+=temp+" ";
-                            else{
-                                if (price==-1)
-                                    price = Integer.valueOf(temp);
-                                else
-                                    val = Integer.valueOf(temp);
-                            }
+                                nam += temp + " ";
                         }
-                        st.getDepartment(depNum).add(new Product(nam,price,val));
+                        price = Integer.valueOf(temp);
+                        temp = tkn.nextToken();
+                        val = Integer.valueOf(temp);
+                        temp = tkn.nextToken();
+                        image = temp;
+                        st.getDepartment(depNum).add(nam,price,val,image);
                     }
                 }
             } while (s != null);
