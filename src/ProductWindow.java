@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class ProductWindow extends JFrame {
-    private boolean admin = true;
-    private Product current;
+    private static Department dep;
+    private static boolean admin;
+    private static Product current;
+    private String imageName = "pics\\default.png";
     private JLabel text;
     private Font font;
     private Color black = new Color(30, 28, 31);
@@ -33,7 +35,7 @@ public class ProductWindow extends JFrame {
             e.printStackTrace();
         }
         font = new Font("minecraft", Font.PLAIN, 16);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setVisible(true);
         this.getContentPane().setBackground(darkgray);
         this.setSize(600, 300);
@@ -63,7 +65,6 @@ public class ProductWindow extends JFrame {
         nameF.setBorder(BorderFactory.createLineBorder(black, 4));
         nameF.setMinimumSize(new Dimension(100, 30));
         nameF.setPreferredSize(new Dimension(100, 30));
-
         //localization of price field
         {
             c.anchor = GridBagConstraints.WEST;
@@ -78,12 +79,14 @@ public class ProductWindow extends JFrame {
         if (admin) {
             //TODO add delete button
             nameF.setEditable(true);
+            nameF.setText(current.getName());
             price.setEditable(true);
+            price.setText("" + current.getPrice());
             SpinnerNumberModel spm = new SpinnerNumberModel();
             spm.setMinimum(0);
             number = new JSpinner(spm);
             //adding image on button
-            Icon def = new ImageIcon("pics\\torch.png");//TODO set default pic
+            Icon def = new ImageIcon(imageName);
             JButton image = new JButton(def);
             image.setMinimumSize(new Dimension(150, 150));
             image.setPreferredSize(new Dimension(150, 150));
@@ -104,6 +107,7 @@ public class ProductWindow extends JFrame {
                         String extension = filename.substring(filename.lastIndexOf(".") + 1);
                         if (!extension.equals("png")) JOptionPane.showMessageDialog(null, "Choose png file!");
                         else {
+                            imageName = "pics\\" + fileopen.getSelectedFile().getName();
                             Icon icon = new ImageIcon(fileopen.getSelectedFile().getAbsolutePath());
                             image.setIcon(icon);
                         }
@@ -129,19 +133,7 @@ public class ProductWindow extends JFrame {
             del.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JFileChooser fileopen = new JFileChooser("pics");
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "png");
-                    fileopen.setFileFilter(filter);
-                    int ret = fileopen.showDialog(button, "Choose File");
-                    if (ret == JFileChooser.APPROVE_OPTION) {
-                        String filename = fileopen.getSelectedFile().getName();
-                        String extension = filename.substring(filename.lastIndexOf(".") + 1);
-                        if (!extension.equals("png")) JOptionPane.showMessageDialog(null, "Choose png file!");
-                        else {
-                            Icon icon = new ImageIcon(fileopen.getSelectedFile().getAbsolutePath());
-                            image.setIcon(icon);
-                        }
-                    }
+                    StoreWindow.delProduct(current);
                 }
             });
             //localization of button delete
@@ -159,16 +151,14 @@ public class ProductWindow extends JFrame {
         } else {
             //setting description field
             nameF.setEditable(false);
-            nameF.setText(current.getName());
             //setting price field
             price.setEditable(false);
-            price.setText("" + current.getPrice());
             //setting spinner
             number = new JSpinner(new SpinnerNumberModel(0, 0, current.getAmount(), 1));
             button = new JButton("Add to cart");
             //setting image label
-            //Icon def = new ImageIcon("pics\\torch.png");//TODO set default pic
-            //   text = new JLabel(def);
+            Icon def = new ImageIcon(current.getImage());//TODO set default pic
+            text = new JLabel(def);
             text.setMinimumSize(new Dimension(150, 150));
             text.setPreferredSize(new Dimension(150, 150));
             text.setMaximumSize(new Dimension(150, 150));
@@ -194,10 +184,10 @@ public class ProductWindow extends JFrame {
                 if (admin) {
                     if (price.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter price!");
                     else if (nameF.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter name!");
-                    else
-                        current = new Product(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue());
-                    System.out.println(current);
-                    StoreWindow.addProduct(current);
+                    else {
+                        StoreWindow.addProduct(current);
+                        current = new Product(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), imageName);
+                    }
                 } else {
                     //TODO
                 }
@@ -309,21 +299,24 @@ public class ProductWindow extends JFrame {
         this.add(button, c);
     }
 
+    public static void setAdmin(boolean admin) {
+        ProductWindow.admin = admin;
+    }
+
+    public static void setCurrent(Product current) {
+        ProductWindow.current = current;
+    }
+
     public static void main(String[] args) {
-        Product product = new Product("Torch", 4, 40);
         ProductWindow pr = new ProductWindow("product");
         pr.setResizable(false);
     }
 
+    static void setDep(Department dep) {
+        ProductWindow.dep = dep;
+    }
+
     Product getProduct() {
         return current;
-    }
-
-    void setProduct(Product current) {
-        this.current = current;
-    }
-
-    void setAdmin(boolean admin) {
-        this.admin = admin;
     }
 }
