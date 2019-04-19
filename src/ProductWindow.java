@@ -9,10 +9,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class ProductWindow extends JFrame {
-    private static Department dep;
-    private static boolean admin;
-    private static Product current;
-    private String imageName = "pics\\default.png";
+    private Department dep = StoreWindow.getCurrent();
+    private boolean admin = StoreWindow.isAdmin();
+    private static Product current = new Product("", 0, 0, "pics\\default.png");
+    private String imgName = current.getImage();
     private JLabel text;
     private Font font;
     private Color black = new Color(30, 28, 31);
@@ -58,6 +58,7 @@ public class ProductWindow extends JFrame {
             c.weighty = 0.1;
         }
         this.add(text, c);
+        nameF.setText(current.getName());
         nameF.setHorizontalAlignment(SwingConstants.CENTER);
         nameF.setFont(font);
         nameF.setBackground(darkgray);
@@ -76,17 +77,15 @@ public class ProductWindow extends JFrame {
             c.weightx = 0.25;
         }
         this.add(nameF, c);
+        Icon def = new ImageIcon(current.getImage());
         if (admin) {
             //TODO add delete button
             nameF.setEditable(true);
-            nameF.setText(current.getName());
             price.setEditable(true);
-            price.setText("" + current.getPrice());
             SpinnerNumberModel spm = new SpinnerNumberModel();
             spm.setMinimum(0);
             number = new JSpinner(spm);
             //adding image on button
-            Icon def = new ImageIcon(imageName);
             JButton image = new JButton(def);
             image.setMinimumSize(new Dimension(150, 150));
             image.setPreferredSize(new Dimension(150, 150));
@@ -107,7 +106,7 @@ public class ProductWindow extends JFrame {
                         String extension = filename.substring(filename.lastIndexOf(".") + 1);
                         if (!extension.equals("png")) JOptionPane.showMessageDialog(null, "Choose png file!");
                         else {
-                            imageName = "pics\\" + fileopen.getSelectedFile().getName();
+                            current.setImage("pics\\" + fileopen.getSelectedFile().getName());
                             Icon icon = new ImageIcon(fileopen.getSelectedFile().getAbsolutePath());
                             image.setIcon(icon);
                         }
@@ -133,7 +132,7 @@ public class ProductWindow extends JFrame {
             del.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    StoreWindow.delProduct(current);
+                    dep.remove(current);
                 }
             });
             //localization of button delete
@@ -157,7 +156,6 @@ public class ProductWindow extends JFrame {
             number = new JSpinner(new SpinnerNumberModel(0, 0, current.getAmount(), 1));
             button = new JButton("Add to cart");
             //setting image label
-            Icon def = new ImageIcon(current.getImage());//TODO set default pic
             text = new JLabel(def);
             text.setMinimumSize(new Dimension(150, 150));
             text.setPreferredSize(new Dimension(150, 150));
@@ -185,8 +183,9 @@ public class ProductWindow extends JFrame {
                     if (price.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter price!");
                     else if (nameF.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter name!");
                     else {
-                        StoreWindow.addProduct(current);
-                        current = new Product(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), imageName);
+                        current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), current.getImage());
+                        dep.add(current);
+//                        current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), current.getImage());
                     }
                 } else {
                     //TODO
@@ -211,6 +210,7 @@ public class ProductWindow extends JFrame {
             c.weighty = 0.1;
         }
         this.add(text, c);
+        price.setText("" + current.getPrice());
         price.setHorizontalAlignment(SwingConstants.RIGHT);
         price.setFont(font);
         price.setBackground(darkgray);
@@ -299,21 +299,13 @@ public class ProductWindow extends JFrame {
         this.add(button, c);
     }
 
-    public static void setAdmin(boolean admin) {
-        ProductWindow.admin = admin;
-    }
-
     public static void setCurrent(Product current) {
         ProductWindow.current = current;
     }
 
-    public static void main(String[] args) {
-        ProductWindow pr = new ProductWindow("product");
-        pr.setResizable(false);
-    }
 
-    static void setDep(Department dep) {
-        ProductWindow.dep = dep;
+    void setDep(Department dep) {
+        this.dep = dep;
     }
 
     Product getProduct() {

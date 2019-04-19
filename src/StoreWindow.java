@@ -8,9 +8,14 @@ import java.util.ArrayList;
 
 public class StoreWindow extends JFrame {
     private static ProductWindow pw;
+
+    public static Department getCurrent() {
+        return current;
+    }
+
     private static Department current;
+    private static boolean admin = true;
     Store s = FileInput.readConfig("config.ttt");
-    private boolean admin = true;
     private Font font;
     private Color black = new Color(30, 28, 31);
     private Color darkgray = new Color(86, 86, 86);
@@ -81,7 +86,14 @@ public class StoreWindow extends JFrame {
         search.setForeground(white);
         search.setBorder(BorderFactory.createLineBorder(black, 4));
         search.setPreferredSize(new Dimension(120, 30));
-        //TODO
+        search.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                current = (Department)
+//                pp.set();
+//                SwingUtilities.updateComponentTreeUI(pp);
+            }
+        });
         //localization of the button
         {
             c.anchor = GridBagConstraints.CENTER;
@@ -93,9 +105,6 @@ public class StoreWindow extends JFrame {
             c.weightx = 0.2;
         }
         this.add(search, c);
-        if (admin) {
-        } else {
-        }
         //localization of side panel
         {
             c.anchor = GridBagConstraints.CENTER;
@@ -119,7 +128,11 @@ public class StoreWindow extends JFrame {
             c.weightx = 0.85;
             c.weighty = 0.8;
         }
-        add(pp, c);
+        add(new JScrollPane(pp), c);
+    }
+
+    static boolean isAdmin() {
+        return admin;
     }
 
     public static void main(String[] args) {
@@ -128,20 +141,15 @@ public class StoreWindow extends JFrame {
     }
 
     static void addProduct(Product p) {
-        current.add(p.name, p.price, p.amount, p.image);
+        current.add(p);
     }
 
     static void delProduct(Product p) {
         current.remove(p);
     }
 
-    void setAdmin(boolean admin) {
-        this.admin = admin;
-    }
-
     class ProductPane extends JPanel {
         ArrayList<Product> products;
-        Product pr = new Product("", 0, 0, "pics\\default.png");
         private JButton p;
 
         ProductPane() {
@@ -154,28 +162,14 @@ public class StoreWindow extends JFrame {
             this.removeAll();
             products = current.products;
             for (int i = 0; i < products.size(); i++) {
-                pr = products.get(i);
-                p = new JButton();
-                Icon icon = new ImageIcon(pr.getImage());
-                p.setIcon(icon);
-                p.setText(pr.getName());
-                p.setHorizontalTextPosition(SwingConstants.CENTER);
-                p.setVerticalTextPosition(SwingConstants.BOTTOM);
+                p = new ProductButton(products.get(i));
                 p.setFont(font);
                 p.setBackground(darkgray);
                 p.setForeground(white);
                 p.setBorder(BorderFactory.createLineBorder(black, 4));
-                p.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        ProductWindow.setAdmin(admin);
-                        ProductWindow.setCurrent(pr);
-                        ProductWindow prw = new ProductWindow(pr.getName());
-                    }
-                });
                 this.add(p);
             }
-            repaint();
+//            SwingUtilities.updateComponentTreeUI(pp);
         }
     }
 
@@ -217,6 +211,7 @@ public class StoreWindow extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     current = (Department) department.getSelectedItem();
                     pp.set();
+                    SwingUtilities.updateComponentTreeUI(pp);
                 }
             });
             //Localization of JComboBox with Departments
@@ -239,8 +234,10 @@ public class StoreWindow extends JFrame {
                 addD.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        String name = "Block";
-                        if (s.checkUnique(name)) {
+                        String name = JOptionPane.showInputDialog(null, "Enter name of the new department", "New department name", JOptionPane.PLAIN_MESSAGE);
+                        if (name == null || name.length() < 1)
+                            JOptionPane.showMessageDialog(null, "Please enter name!");
+                        else if (s.checkUnique(name)) {
                             s.add(name);
                             department.addItem(s.getDepartment(s.departments.size() - 1));
                         } else JOptionPane.showMessageDialog(null, "Department \"" + name + "\" already exists!");
@@ -266,9 +263,10 @@ public class StoreWindow extends JFrame {
                 addP.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        ProductWindow.setAdmin(admin);
                         ProductWindow.setCurrent(new Product("", 0, 0, "pics\\default.png"));
-                        pw = new ProductWindow("New Product");
+                        current.add(new ProductWindow("New Product").getProduct());
+                        pp.set();
+                        SwingUtilities.updateComponentTreeUI(pp);
                     }
                 });
                 //Localization of button "Add Product"
@@ -310,7 +308,7 @@ public class StoreWindow extends JFrame {
                 JButton cart = new JButton();
                 Icon icon = new ImageIcon("pics\\minecart.png");
                 cart.setIcon(icon);
-                cart.setText("Add to cart");
+                cart.setText("Cart");
                 cart.setHorizontalTextPosition(SwingConstants.RIGHT);
                 cart.setFont(font);
                 cart.setBackground(darkgray);
@@ -334,7 +332,34 @@ public class StoreWindow extends JFrame {
                 }
                 add(cart, c);
             }
-
+            user = new JButton();
+            user.setText(admin ? "Log in as User" : "Log in as Admin");
+            user.setHorizontalTextPosition(SwingConstants.RIGHT);
+            user.setFont(font);
+            user.setBackground(darkgray);
+            user.setForeground(white);
+            user.setBorder(BorderFactory.createLineBorder(black, 4));
+            user.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    admin = admin ? false : true;
+                    user.setText(admin ? "Log in as User" : "Log in as Admin");
+//                                        SwingUtilities.updateComponentTreeUI(sp);
+                }
+            });
+            //Localization of button "Add to cart"
+            {
+                c.anchor = GridBagConstraints.CENTER;
+                c.fill = GridBagConstraints.HORIZONTAL;
+                c.gridheight = 1;
+                c.gridwidth = 1;
+                c.gridx = 0;
+                c.gridy = 5;
+                c.weighty = 0.4;
+                c.insets = new Insets(10, 10, 10, 10);
+            }
+            add(user, c);
         }
     }
 }
+
