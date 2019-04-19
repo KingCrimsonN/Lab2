@@ -90,9 +90,7 @@ public class ProductWindow extends JFrame {
             image.setMinimumSize(new Dimension(150, 150));
             image.setPreferredSize(new Dimension(150, 150));
             image.setMaximumSize(new Dimension(150, 150));
-            image.setFont(font);
-            image.setBackground(darkgray);
-            image.setForeground(white);
+            buttonAppearanceSetting(image);
             image.setHorizontalAlignment(SwingConstants.CENTER);
             image.addActionListener(new ActionListener() {
                 @Override
@@ -125,14 +123,13 @@ public class ProductWindow extends JFrame {
             }
             this.add(image, c);
             JButton del = new JButton("Delete Product");
-            del.setFont(font);
-            del.setBackground(darkgray);
-            del.setForeground(white);
+            buttonAppearanceSetting(del);
             del.setHorizontalAlignment(SwingConstants.CENTER);
             del.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     dep.remove(current);
+                    dispose();
                 }
             });
             //localization of button delete
@@ -184,6 +181,7 @@ public class ProductWindow extends JFrame {
                     else if (nameF.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter name!");
                     else {
                         current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), current.getImage());
+//                        if(dep.checkUnique(current.toString()))
                         dep.add(current);
 //                        current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), current.getImage());
                     }
@@ -262,6 +260,7 @@ public class ProductWindow extends JFrame {
             c.weighty = 0.1;
         }
         this.add(text, c);
+        number.setValue(current.getAmount());
         number.setFont(font);
         number.getEditor().getComponent(0).setBackground(darkgray);
         number.getEditor().getComponent(0).setForeground(white);
@@ -280,9 +279,7 @@ public class ProductWindow extends JFrame {
             c.weightx = 0.25;
         }
         this.add(number, c);
-        button.setFont(font);
-        button.setBackground(darkgray);
-        button.setForeground(white);
+        buttonAppearanceSetting(button);
         button.setBorder(BorderFactory.createLineBorder(black, 4));
         //localization of the button
         {
@@ -303,9 +300,11 @@ public class ProductWindow extends JFrame {
         ProductWindow.current = current;
     }
 
-
-    void setDep(Department dep) {
-        this.dep = dep;
+    private void buttonAppearanceSetting(JButton button) {
+        button.setFont(font);
+        button.setBackground(darkgray);
+        button.setForeground(white);
+        button.setBorder(BorderFactory.createLineBorder(black, 4));
     }
 
     Product getProduct() {
