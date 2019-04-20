@@ -1,16 +1,19 @@
 public class Product {
-    String name, image;
+    String name, image, description;
     int amount, price;
+    Department department;
 
-    Product(String nName, int val, int nPrice, String nImage) {
-        edit(nName, val, nPrice, nImage);
+    Product(String nName, int nPrice, int val, Department dep, String nImage, String desc) {
+        edit(nName, nPrice, val, dep, nImage, desc);
     }
 
-    public void edit(String nName, int val, int nPrice, String img) {
+    public void edit(String nName, int nPrice, int val, Department dep, String nImage, String desc) {
         name = nName;
-        amount = val;
         price = nPrice;
-        image = img;
+        amount = val;
+        department = dep;
+        image = nImage;
+        description = desc;
     }
 
     public boolean equals(String n) {
@@ -20,7 +23,7 @@ public class Product {
     }
 
     public String toString() {
-        return name + " " + price + " " + amount + " " + image + "\n";
+        return name + " " + price + " " + amount + " " + department.getName() + " " + image + " " + description + "\n";
     }
 
     public void setName(String name) {
