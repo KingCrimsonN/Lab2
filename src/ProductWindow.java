@@ -21,6 +21,7 @@ public class ProductWindow extends JFrame {
     private JSpinner number;
     private JTextField price = new JTextField();
     private JTextField nameF = new JTextField();
+    private JTextArea description = new JTextArea();
 
     ProductWindow(String name, boolean admin, boolean newP, Product current) {
         super(name);
@@ -39,7 +40,7 @@ public class ProductWindow extends JFrame {
         this.setSize(600, 300);
         this.getContentPane().setLayout(new GridBagLayout());
 //        this.current = current;
-        this.dep = current.department;
+        this.dep = current.getDepartment();
         GridBagConstraints c = new GridBagConstraints();
         text = new JLabel("Name:");
         text.setFont(font);
@@ -79,17 +80,17 @@ public class ProductWindow extends JFrame {
         this.add(nameF, c);
         Icon def = new ImageIcon(current.getImage());
         if (admin) {
-            //TODO arrange code
             nameF.setEditable(true);
             price.setEditable(true);
+            description.setEditable(true);
             SpinnerNumberModel spm = new SpinnerNumberModel();
             spm.setMinimum(0);
             number = new JSpinner(spm);
             //adding image on button
             JButton image = new JButton(def);
-            image.setMinimumSize(new Dimension(150, 150));
-            image.setPreferredSize(new Dimension(150, 150));
-            image.setMaximumSize(new Dimension(150, 150));
+            image.setMinimumSize(new Dimension(160, 160));
+            image.setPreferredSize(new Dimension(160, 160));
+            image.setMaximumSize(new Dimension(160, 160));
             buttonAppearanceSetting(image);
             image.setHorizontalAlignment(SwingConstants.CENTER);
             image.addActionListener(new ActionListener() {
@@ -115,7 +116,7 @@ public class ProductWindow extends JFrame {
             {
                 c.anchor = GridBagConstraints.CENTER;
                 c.fill = GridBagConstraints.NONE;
-                c.gridheight = 3;
+                c.gridheight = 4;
                 c.gridwidth = 1;
                 c.gridx = 2;
                 c.gridy = 0;
@@ -144,7 +145,7 @@ public class ProductWindow extends JFrame {
                     c.gridheight = 2;
                     c.gridwidth = 1;
                     c.gridx = 2;
-                    c.gridy = 3;
+                    c.gridy = 4;
                     c.weightx = 0.25;
                 }
                 this.add(del, c);
@@ -158,11 +159,13 @@ public class ProductWindow extends JFrame {
             //setting spinner
             number = new JSpinner(new SpinnerNumberModel(0, 0, current.getAmount(), 1));
             button = new JButton("Add to cart");
+            //setting description
+            description.setEditable(false);
             //setting image label
             text = new JLabel(def);
-            text.setMinimumSize(new Dimension(150, 150));
-            text.setPreferredSize(new Dimension(150, 150));
-            text.setMaximumSize(new Dimension(150, 150));
+            text.setMinimumSize(new Dimension(160, 160));
+            text.setPreferredSize(new Dimension(160, 160));
+            text.setMaximumSize(new Dimension(160, 160));
             text.setFont(font);
             text.setBackground(darkgray);
             text.setForeground(white);
@@ -187,8 +190,8 @@ public class ProductWindow extends JFrame {
                     else if (price.getText().isEmpty() || price.getText().equals("0"))
                         JOptionPane.showMessageDialog(null, "Enter price!");
                     else if ((Integer) number.getValue() == 0) JOptionPane.showMessageDialog(null, "Enter amount!");
-                    else if (!StoreWindow.s.checkUniqueProduct(nameF.getText())&&!nameF.getText().equals(current.name))
-                        JOptionPane.showMessageDialog(null, "Product " + current.getName() + " is already exists!");
+                    else if (!StoreWindow.s.checkUniqueProduct(nameF.getText()) && !nameF.getText().equals(current.getName()))
+                        JOptionPane.showMessageDialog(null, "Product " + nameF.getText() + " is already exists!");
                     else {
                         current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), dep, current.getImage(), "");
                         dep.add(current);
@@ -295,12 +298,50 @@ public class ProductWindow extends JFrame {
             c.weightx = 0.25;
         }
         this.add(number, c);
+        text = new JLabel("Description:");
+        text.setHorizontalAlignment(SwingConstants.RIGHT);
+        text.setFont(font);
+        text.setBackground(darkgray);
+        text.setForeground(white);
+        //localization of label "Description"
+        {
+            c.anchor = GridBagConstraints.EAST;
+            c.fill = GridBagConstraints.NONE;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.gridx = 0;
+            c.gridy = 3;
+            c.weightx = 0.25;
+            c.weighty = 0.1;
+        }
+        this.add(text, c);
+        description.setText(current.getDescription());
+        description.setLineWrap(true);
+        description.setWrapStyleWord(true);
+        description.setFont(font);
+        description.setBackground(darkgray);
+        description.setForeground(white);
+        description.setBorder(BorderFactory.createLineBorder(black, 4));
+        description.setMinimumSize(new Dimension(0, 50));
+        description.setPreferredSize(new Dimension(0, 50));
+        description.setMaximumSize(new Dimension(0, 50));
+        //localization of text area with description
+        {
+            c.anchor = GridBagConstraints.WEST;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.gridx = 1;
+            c.gridy = 3;
+            c.weightx = 0.25;
+        }
+        this.add(new JScrollPane(description), c);
         buttonAppearanceSetting(button);
         button.setBorder(BorderFactory.createLineBorder(black, 4));
         //localization of the button
         {
             c.gridx = 0;
-            c.gridy = 3;
+            c.gridy = 4;
             c.gridwidth = admin && !newP ? 2 : GridBagConstraints.REMAINDER;
             c.gridheight = 1;
             c.weightx = 0.0;
@@ -317,9 +358,5 @@ public class ProductWindow extends JFrame {
         button.setBackground(darkgray);
         button.setForeground(white);
         button.setBorder(BorderFactory.createLineBorder(black, 4));
-    }
-
-    Product getProduct() {
-        return current;
     }
 }

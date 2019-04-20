@@ -21,7 +21,7 @@ public class StoreWindow extends JFrame {
     private Color darkgray = new Color(86, 86, 86);
     private Color gray = new Color(155, 155, 155);
     private Color white = new Color(213, 213, 213);
-    //    private SidePanel sp = new SidePanel();
+    private SidePanel sp;
     private ProductPane pp = new ProductPane();
     private JTextField find;
     private JLabel l;
@@ -45,7 +45,8 @@ public class StoreWindow extends JFrame {
         this.getContentPane().setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         //label of the shop
-        l = new JLabel("Logo:");
+        Icon icon = new ImageIcon("pics\\logo.png");
+        l = new JLabel(icon);
         l.setFont(font);
         l.setBackground(darkgray);
         l.setForeground(white);
@@ -87,9 +88,7 @@ public class StoreWindow extends JFrame {
         search.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                current = (Department)
-//                pp.set();
-//                SwingUtilities.updateComponentTreeUI(pp);
+                pp.set(s.searchByName(find.getText()));
             }
         });
         //localization of the button
@@ -114,7 +113,8 @@ public class StoreWindow extends JFrame {
             c.weightx = 0.15;
             c.weighty = 0.8;
         }
-        add(new SidePanel(), c);
+        sp = new SidePanel();
+        add(sp, c);
         //localization of panel of products
         {
             c.anchor = GridBagConstraints.CENTER;
@@ -171,6 +171,12 @@ public class StoreWindow extends JFrame {
             super();
             this.setBackground(darkgray);
             this.setLayout(new GridBagLayout());
+
+            set();
+        }
+
+        private void set() {
+            if (sp != null)sp.removeAll();
             GridBagConstraints c = new GridBagConstraints();
             pickDep = new JLabel("Departments");
             pickDep.setFont(font);
@@ -295,7 +301,6 @@ public class StoreWindow extends JFrame {
                         Product product = new Product("", 0, 0, current, "pics\\default.png", "");
                         if (s.checkUnique(product.getName())) current.add(product);
                         ProductWindow prw = new ProductWindow("New product", admin, true, product);
-
                         pp.set(current.getProducts());
                     }
                 });
@@ -331,6 +336,10 @@ public class StoreWindow extends JFrame {
                     c.weighty = 0.4;
                 }
                 add(save, c);
+                if (s.departments == null || s.departments.size() == 0) {
+                    addP.setEnabled(false);
+                    delD.setEnabled(false);
+                }
             } else {
                 JButton cart = new JButton();
                 Icon icon = new ImageIcon("pics\\minecart.png");
@@ -367,10 +376,9 @@ public class StoreWindow extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     admin = !admin;
                     user.setText(admin ? "Log in as User" : "Log in as Admin");
-
+                    sp.set();
                 }
             });
-
             //Localization of button "Add to cart"
             {
                 c.anchor = GridBagConstraints.CENTER;
