@@ -48,7 +48,9 @@ public class Department {
         return groupPrice[0];
     }
 
-    public boolean equals(String n) {
+   public boolean equals(String n) {
+        if (n==null)
+            return false;
         return n.equals(name);
     }
 
