@@ -201,8 +201,10 @@ public class StoreWindow extends JFrame {
             department.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    current = (Department) department.getSelectedItem();
-                    pp.set(current.getProducts());
+                    if (department.getItemAt(1)!=null) {
+                        current = (Department) department.getSelectedItem();
+                        pp.set(current.getProducts());
+                    }
                 }
             });
             //Localization of JComboBox with Departments
@@ -229,6 +231,11 @@ public class StoreWindow extends JFrame {
                         else if (s.checkUnique(name)) {
                             s.add(name);
                             department.addItem(s.getDepartment(s.departments.size() - 1));
+                            current=s.getDepartment(s.departments.size()-1);
+                            if (!department.isEnabled()) {
+                                department.setEnabled(true);
+                                department.removeItemAt(0);
+                            }
                         } else JOptionPane.showMessageDialog(null, "Department \"" + name + "\" already exists!");
                     }
                 });
@@ -249,17 +256,21 @@ public class StoreWindow extends JFrame {
                 delD.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        int response = JOptionPane.showConfirmDialog(null,
-                                "Delete department \"" + current.getName() + "\"?", "Deleting department", JOptionPane.YES_NO_OPTION);
-                        if (response == JOptionPane.YES_OPTION) {
+                        if (current!=null) {
+                            int response = JOptionPane.showConfirmDialog(null,
+                                    "Delete department \"" + current.getName() + "\"?", "Deleting department", JOptionPane.YES_NO_OPTION);
+                            if (response == JOptionPane.YES_OPTION) {
                             s.remove(current);
-                            if (!s.departments.isEmpty()) {
-                                department.removeItem(current);
-                                pp.set(current.getProducts());
-                            }
-                            else {
-                                current = null;
-                                pp.set(null);
+                                if (!s.departments.isEmpty()) {
+                                    department.removeItem(current);
+                                    pp.set(current.getProducts());
+                                } else {
+                                    department.setSelectedItem(null);
+                                    pp.set(null);
+                                    if(!department.getItemAt(0).equals(null)){
+                                        department.setEnabled(false);
+                                    }
+                                }
                             }
                         }
                     }
