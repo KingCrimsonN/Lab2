@@ -232,6 +232,7 @@ public class StoreWindow extends JFrame {
                             s.add(name);
                             department.addItem(s.getDepartment(s.departments.size() - 1));
                             current=s.getDepartment(s.departments.size()-1);
+                            department.setSelectedItem(current);
                             if (!department.isEnabled()) {
                                 department.setEnabled(true);
                                 department.removeItemAt(0);
