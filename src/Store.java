@@ -8,12 +8,12 @@ public class Store {
         departments.add(new Department(name));
     }
 
-    public void addProduct(String depName, String prodName, int am, int price,String img,String desc){
+    public void addProduct(String depName, String prodName, int price, int am ,String img, String desc){
         Department dep;
         if (checkUnique(depName))
             add(depName);
         dep = getDepartment(depName);
-        dep.add(prodName, am, price,img, desc);
+        dep.add(prodName, price, am,img,desc);
     }
 
     public void edit(Department dep, String name) {
