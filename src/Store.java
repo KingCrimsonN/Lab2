@@ -5,15 +5,15 @@ public class Store {
     ArrayList<Product> cart = new ArrayList<>();
 
     public void add(String name) {
-            departments.add(new Department(name));
+        departments.add(new Department(name));
     }
 
-    public void addProduct(String depName, String prodName, int am, int price,String img){
+    public void addProduct(String depName, String prodName, int am, int price,String img,String desc){
         Department dep;
         if (checkUnique(depName))
             add(depName);
         dep = getDepartment(depName);
-        dep.add(prodName, am, price,img);
+        dep.add(prodName, am, price,img, desc);
     }
 
     public void edit(Department dep, String name) {
@@ -38,13 +38,13 @@ public class Store {
         }
         return null;
     }
-    
+
     public Department searchByName(String sName){
         Department searchDepartment = new Department("Search Results");
         searchDepartment.products = SearchUtilit.findByName(getAllProducts(),sName);
         return searchDepartment;
     }
-    
+
     public Department searchByName(Department dep, String sName){
         Department searchDepartment = new Department("Search Results");
         searchDepartment.products = SearchUtilit.findByName(dep.products,sName);
