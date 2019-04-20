@@ -38,6 +38,12 @@ public class Store {
         }
         return null;
     }
+    
+    public Department searchByName(Department dep, String sName){
+        Department searchDepartment = dep;
+        searchDepartment.products = SearchUtilit.findByName(dep.products,sName);
+        return searchDepartment;
+    }
 
     public int totalPrice() {
         int[] totalPrice = {0};
