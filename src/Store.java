@@ -7,6 +7,14 @@ public class Store {
     public void add(String name) {
         departments.add(new Department(name));
     }
+    
+    public void addToCart(Product prod){
+        cart.add(prod);
+    }
+
+    public ArrayList<Product> getCart(){
+        return cart;
+    }
 
     public void addProduct(String depName, String prodName, int price, int am ,String img, String desc){
         Department dep;
