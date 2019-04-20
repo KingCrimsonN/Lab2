@@ -193,7 +193,14 @@ public class ProductWindow extends JFrame {
                             JOptionPane.showMessageDialog(null, "Product " + current.getName() + " is already exists!");
                     }
                 } else {
-                    //TODO
+                    current.setAmount(current.getAmount()-(Integer) number.getValue());
+                        for (int i=0; i<StoreWindow.s.getCart().size();i++){
+                            if (current.equals(StoreWindow.s.getCart().get(i).getName())) {
+                                StoreWindow.s.cart.get(i).setAmount(StoreWindow.s.getCart().get(i).getAmount() + (Integer) number.getValue());
+                                return;
+                            }
+                        }
+                    StoreWindow.s.addToCart(new Product(current.getName(),current.getPrice(),(Integer) number.getValue(), dep,current.getImage(),""));
                 }
                 dispose();
             }
