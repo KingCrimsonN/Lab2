@@ -144,9 +144,14 @@ public class StoreWindow extends JFrame {
             this.setLayout(new GridLayout(0, 4));
         }
 
-        void set() {
+        void set(ArrayList<Product> list) {
             this.removeAll();
-            products = current.products;
+            products = list;
+            if (list==null) {
+                p.removeAll();
+                this.update(this.getGraphics());
+                return;
+            }
             for (int i = 0; i < products.size(); i++) {
                 p = new ProductButton(products.get(i), admin);
                 p.setFont(font);
@@ -197,7 +202,7 @@ public class StoreWindow extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     current = (Department) department.getSelectedItem();
-                    pp.set();
+                    pp.set(current.getProducts());
                 }
             });
             //Localization of JComboBox with Departments
@@ -248,8 +253,14 @@ public class StoreWindow extends JFrame {
                                 "Delete department \"" + current.getName() + "\"?", "Deleting department", JOptionPane.YES_NO_OPTION);
                         if (response == JOptionPane.YES_OPTION) {
                             s.remove(current);
-                            department.removeItem(current);
-                            pp.set();
+                            if (!s.departments.isEmpty()) {
+                                department.removeItem(current);
+                                pp.set(current.getProducts());
+                            }
+                            else {
+                                current = null;
+                                pp.set(null);
+                            }
                         }
                     }
                 });
@@ -276,7 +287,7 @@ public class StoreWindow extends JFrame {
                         ProductWindow prw = new ProductWindow("New product", admin, true, product);
                         if (s.checkUnique(product.getName())) current.add(product);
                         if (product.name.equals("")) current.remove(product);
-                        pp.set();
+                        pp.set(current.getProducts());
                     }
                 });
                 //Localization of button "Add Product"
@@ -373,4 +384,3 @@ public class StoreWindow extends JFrame {
         button.setBorder(BorderFactory.createLineBorder(black, 4));
     }
 }
-
