@@ -1,10 +1,18 @@
 public class Product {
-    String name, image, description;
-    int amount, price;
-    Department department;
+    private String name, image, description;
+    private int amount, price;
+    private Department department;
 
     Product(String nName, int nPrice, int val, Department dep, String nImage, String desc) {
         edit(nName, nPrice, val, dep, nImage, desc);
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Department getDepartment() {
+        return department;
     }
 
     public void edit(String nName, int nPrice, int val, Department dep, String nImage, String desc) {
