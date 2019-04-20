@@ -47,16 +47,12 @@ public class Store {
         return null;
     }
 
-    public Department searchByName(String sName){
-        Department searchDepartment = new Department("Search Results");
-        searchDepartment.products = SearchUtilit.findByName(getAllProducts(),sName);
-        return searchDepartment;
+   public ArrayList<Product> searchByName(String sName){
+        return SearchUtilit.findByName(getAllProducts(),sName);
     }
 
-    public Department searchByName(Department dep, String sName){
-        Department searchDepartment = new Department("Search Results");
-        searchDepartment.products = SearchUtilit.findByName(dep.products,sName);
-        return searchDepartment;
+    public ArrayList<Product> searchByName(Department dep, String sName){
+        return SearchUtilit.findByName(dep.products,sName);
     }
 
     public int totalPrice() {
