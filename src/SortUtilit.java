@@ -5,9 +5,15 @@ import java.util.Comparator;
 public class SortUtilit {
 
     public static void sortByName(ArrayList list){
-        Comparator comparator;
-        if (list.get(0) instanceof Product) comparator = Comparator.comparing(Product::getName);
-        else comparator = Comparator.comparing(Department::getName);
+        Comparator comparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if (list.get(0) instanceof Product){
+                    return String.CASE_INSENSITIVE_ORDER.compare(((Product)o1).getName(),((Product)o2).getName());
+                }
+                return String.CASE_INSENSITIVE_ORDER.compare(((Department)o1).getName(),((Department)o2).getName());
+            }
+        };
         Collections.sort(list,comparator);
     }
     public static void sortByValue(ArrayList<Product> products, boolean byAmount){
