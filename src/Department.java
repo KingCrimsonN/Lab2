@@ -9,16 +9,21 @@ public class Department {
         name = nName;
     }
 
-    public void add(String nName, int am, int price, String image) {
-        if (checkUnique(nName))
-            products.add(new Product(nName, am, price,image));
+    public void add(Product prod){
+        if (checkUnique(prod.getName()))
+        products.add(prod);
     }
 
-    public void edit(Product prod, String name, int val, int price, String img) {
+    public void add(String nName, int price, int am, String image, String desc) {
+        if (checkUnique(nName))
+            products.add(new Product(nName, price, am, this,image,desc));
+    }
+
+    public void edit(Product prod, String name, int val, int price, String img, String desc) {
         if (checkUnique(name))
             for (int i = 0; i < products.size(); i++) {
                 if (prod.name.equals(products.get(i)))
-                    products.get(i).edit(name, val, price,img);
+                    products.get(i).edit(name, price, val, this , img ,desc);
             }
     }
 
