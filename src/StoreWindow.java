@@ -15,12 +15,13 @@ public class StoreWindow extends JFrame {
 
     private static Department current;
     private static boolean admin = true;
-    Store s = FileInput.readConfig("config.ttt");
+    static Store s = FileInput.readConfig("config.ttt");
     private Font font;
     private Color black = new Color(30, 28, 31);
     private Color darkgray = new Color(86, 86, 86);
     private Color gray = new Color(155, 155, 155);
     private Color white = new Color(213, 213, 213);
+    //    private SidePanel sp = new SidePanel();
     private ProductPane pp = new ProductPane();
     private JTextField find;
     private JLabel l;
@@ -131,14 +132,6 @@ public class StoreWindow extends JFrame {
     public static void main(String[] args) {
         StoreWindow sw = new StoreWindow("MINECRAFT IS MY LIFE");
         sw.setVisible(true);
-    }
-
-    static void addProduct(Product p) {
-        current.add(p);
-    }
-
-    static void delProduct(Product p) {
-        current.remove(p);
     }
 
     class ProductPane extends JPanel {
@@ -278,11 +271,11 @@ public class StoreWindow extends JFrame {
                 addP.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-//                        ProductWindow.setCurrent();
-                        Product product = new ProductWindow("New Product", admin, true, new Product("", 0, 0, "pics\\default.png")).getProduct();
-                        if (current.checkUnique(current.toString())) current.add(product);
-                        else
-                            JOptionPane.showMessageDialog(null, "Product " + product.getName() + " is already exists!");
+                        //TODO add normally product
+                        Product product = new Product("", 0, 0, current, "pics\\default.png", "");
+                        ProductWindow prw = new ProductWindow("New product", admin, true, product);
+                        if (s.checkUnique(product.getName())) current.add(product);
+                        if (product.name.equals("")) current.remove(product);
                         pp.set();
                     }
                 });
@@ -351,12 +344,12 @@ public class StoreWindow extends JFrame {
             user.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    admin = admin ? false : true;
+                    admin = !admin;
                     user.setText(admin ? "Log in as User" : "Log in as Admin");
 
-//                                        SwingUtilities.updateComponentTreeUI(sp);
                 }
             });
+
             //Localization of button "Add to cart"
             {
                 c.anchor = GridBagConstraints.CENTER;

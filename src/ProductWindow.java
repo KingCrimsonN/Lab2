@@ -9,9 +9,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class ProductWindow extends JFrame {
-    private Department dep = StoreWindow.getCurrent();
-    private static Product current = new Product("", 0, 0, "pics\\default.png");
-    private String imgName = current.getImage();
+    private Department dep;
+    private Product current;
     private JLabel text;
     private Font font;
     private Color black = new Color(30, 28, 31);
@@ -39,6 +38,8 @@ public class ProductWindow extends JFrame {
         this.getContentPane().setBackground(darkgray);
         this.setSize(600, 300);
         this.getContentPane().setLayout(new GridBagLayout());
+//        this.current = current;
+        this.dep = current.department;
         GridBagConstraints c = new GridBagConstraints();
         text = new JLabel("Name:");
         text.setFont(font);
@@ -131,7 +132,6 @@ public class ProductWindow extends JFrame {
                         int response = JOptionPane.showConfirmDialog(null,
                                 "Delete product \"" + current.getName() + "\"?", "Deleting product", JOptionPane.YES_NO_OPTION);
                         if (response == JOptionPane.YES_OPTION) {
-                            //TODO NullPointerException if delete product while adding
                             dep.remove(current);
                             dispose();
                         }
@@ -186,10 +186,11 @@ public class ProductWindow extends JFrame {
                     if (price.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter price!");
                     else if (nameF.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter name!");
                     else {
-                        current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), current.getImage());
-//                        if(dep.checkUnique(current.toString()))
-                        dep.add(current);
-//                        current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), current.getImage());
+                        //TODO or to look how to add new product here
+                        current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), dep, current.getImage(), "");
+                        if (StoreWindow.s.checkUnique(current.getName())) dep.add(current);
+                        else
+                            JOptionPane.showMessageDialog(null, "Product " + current.getName() + " is already exists!");
                     }
                 } else {
                     //TODO
@@ -291,7 +292,7 @@ public class ProductWindow extends JFrame {
         {
             c.gridx = 0;
             c.gridy = 3;
-            c.gridwidth = admin&&!newP ? 2 : GridBagConstraints.REMAINDER;
+            c.gridwidth = admin && !newP ? 2 : GridBagConstraints.REMAINDER;
             c.gridheight = 1;
             c.weightx = 0.0;
             c.weighty = 0.0;

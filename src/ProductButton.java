@@ -16,7 +16,6 @@ public class ProductButton extends JButton {
         this.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                ProductWindow.setCurrent(p);
                 ProductWindow prw = new ProductWindow(p.getName(), admin, false, p);
             }
         });
