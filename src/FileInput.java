@@ -61,6 +61,7 @@ public class FileInput {
                         depNum++;
                     }
                     else {
+                        String temnam="";
                         String nam="";
                         String temp="a";
                         String image="";
@@ -70,8 +71,12 @@ public class FileInput {
                         while (!checkNum(temp)) {
                             temp = tkn.nextToken();
                             if (!checkNum(temp))
-                                nam += temp + " ";
+                                nam += " " + temp;
                         }
+                        for (int i=1; i<nam.length(); i++){
+                            temnam+=nam.charAt(i);
+                        }
+                        nam=temnam;
                         price = Integer.valueOf(temp);
                         temp = tkn.nextToken();
                         val = Integer.valueOf(temp);
