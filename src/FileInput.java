@@ -64,6 +64,7 @@ public class FileInput {
                         String nam="";
                         String temp="a";
                         String image="";
+                        String desc="";
                         int val=-1,price=-1;
                         StringTokenizer tkn = new StringTokenizer(s);
                         while (!checkNum(temp)) {
@@ -76,7 +77,12 @@ public class FileInput {
                         val = Integer.valueOf(temp);
                         temp = tkn.nextToken();
                         image = temp;
-                        st.getDepartment(depNum).add(nam,price,val,image);
+                        while (tkn.hasMoreTokens()){
+                            temp = tkn.nextToken();
+                            desc+=temp;
+                        }
+                        Product prod = new Product(nam,price,val,st.getDepartment(depNum),image,desc);
+                        st.getDepartment(depNum).add(prod);
                     }
                 }
             } while (s != null);
