@@ -128,10 +128,6 @@ public class StoreWindow extends JFrame {
         add(new JScrollPane(pp), c);
     }
 
-    static boolean isAdmin() {
-        return admin;
-    }
-
     public static void main(String[] args) {
         StoreWindow sw = new StoreWindow("MINECRAFT IS MY LIFE");
         sw.setVisible(true);
@@ -159,7 +155,7 @@ public class StoreWindow extends JFrame {
             this.removeAll();
             products = current.products;
             for (int i = 0; i < products.size(); i++) {
-                p = new ProductButton(products.get(i));
+                p = new ProductButton(products.get(i), admin);
                 p.setFont(font);
                 p.setBackground(darkgray);
                 p.setForeground(white);
@@ -188,7 +184,8 @@ public class StoreWindow extends JFrame {
             //Localization of label "Departments"
             {
                 c.anchor = GridBagConstraints.CENTER;
-                c.fill = GridBagConstraints.HORIZONTAL;
+                c.fill = GridBagConstraints.BOTH;
+                c.insets = new Insets(10, 10, 10, 10);
                 c.gridheight = 1;
                 c.gridwidth = 1;
                 c.gridx = 0;
@@ -213,7 +210,8 @@ public class StoreWindow extends JFrame {
             //Localization of JComboBox with Departments
             {
                 c.anchor = GridBagConstraints.CENTER;
-                c.fill = GridBagConstraints.HORIZONTAL;
+                c.fill = GridBagConstraints.BOTH;
+                c.insets = new Insets(10, 10, 10, 10);
                 c.gridheight = 1;
                 c.gridwidth = 1;
                 c.gridx = 0;
@@ -239,13 +237,13 @@ public class StoreWindow extends JFrame {
                 //Localization of button "Add department"
                 {
                     c.anchor = GridBagConstraints.CENTER;
-                    c.fill = GridBagConstraints.HORIZONTAL;
+                    c.fill = GridBagConstraints.BOTH;
+                    c.insets = new Insets(10, 10, 10, 10);
                     c.gridheight = 1;
                     c.gridwidth = 1;
                     c.gridx = 0;
                     c.gridy = 2;
                     c.weighty = 0.4;
-                    c.insets = new Insets(40, 20, 40, 20);
                 }
                 add(addD, c);
                 JButton delD = new JButton("Delete Department");
@@ -255,21 +253,24 @@ public class StoreWindow extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         int response = JOptionPane.showConfirmDialog(null,
                                 "Delete department \"" + current.getName() + "\"?", "Deleting department", JOptionPane.YES_NO_OPTION);
-                        if (response == JOptionPane.YES_OPTION) s.remove(current);
-                        //TODO
-                        pp.set();
+                        if (response == JOptionPane.YES_OPTION) {
+                            s.remove(current);
+                            department.removeItem(current);
+                            pp.set();
+                        }
                     }
                 });
                 //Localization of button "Delete department"
                 {
                     c.anchor = GridBagConstraints.CENTER;
-                    c.fill = GridBagConstraints.HORIZONTAL;
+                    c.fill = GridBagConstraints.BOTH;
+                    c.insets = new Insets(10, 10, 10, 10);
                     c.gridheight = 1;
                     c.gridwidth = 1;
                     c.gridx = 0;
                     c.gridy = 3;
                     c.weighty = 0.4;
-                    c.insets = new Insets(40, 20, 40, 20);
+//                    c.insets = new Insets(40, 20, 40, 20);
                 }
                 add(delD, c);
                 JButton addP = new JButton("Add new product");
@@ -277,8 +278,8 @@ public class StoreWindow extends JFrame {
                 addP.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        ProductWindow.setCurrent(new Product("", 0, 0, "pics\\default.png"));
-                        Product product = new ProductWindow("New Product").getProduct();
+//                        ProductWindow.setCurrent();
+                        Product product = new ProductWindow("New Product", admin, true, new Product("", 0, 0, "pics\\default.png")).getProduct();
                         if (current.checkUnique(current.toString())) current.add(product);
                         else
                             JOptionPane.showMessageDialog(null, "Product " + product.getName() + " is already exists!");
@@ -288,13 +289,13 @@ public class StoreWindow extends JFrame {
                 //Localization of button "Add Product"
                 {
                     c.anchor = GridBagConstraints.CENTER;
-                    c.fill = GridBagConstraints.HORIZONTAL;
+                    c.fill = GridBagConstraints.BOTH;
+                    c.insets = new Insets(10, 10, 10, 10);
                     c.gridheight = 1;
                     c.gridwidth = 1;
                     c.gridx = 0;
                     c.gridy = 4;
                     c.weighty = 0.4;
-                    c.insets = new Insets(40, 20, 40, 20);
                 }
                 add(addP, c);
                 JButton save = new JButton("Save into file");
@@ -308,13 +309,13 @@ public class StoreWindow extends JFrame {
                 //Localization of button "Save to File"
                 {
                     c.anchor = GridBagConstraints.CENTER;
-                    c.fill = GridBagConstraints.HORIZONTAL;
+                    c.fill = GridBagConstraints.BOTH;
+                    c.insets = new Insets(10, 10, 10, 10);
                     c.gridheight = 1;
                     c.gridwidth = 1;
                     c.gridx = 0;
                     c.gridy = 5;
                     c.weighty = 0.4;
-                    c.insets = new Insets(40, 20, 40, 20);
                 }
                 add(save, c);
             } else {
@@ -332,7 +333,8 @@ public class StoreWindow extends JFrame {
                 //Localization of button "Add to cart"
                 {
                     c.anchor = GridBagConstraints.CENTER;
-                    c.fill = GridBagConstraints.HORIZONTAL;
+                    c.fill = GridBagConstraints.BOTH;
+                    c.insets = new Insets(10, 10, 10, 10);
                     c.gridheight = 1;
                     c.gridwidth = 1;
                     c.gridx = 0;
@@ -351,19 +353,21 @@ public class StoreWindow extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     admin = admin ? false : true;
                     user.setText(admin ? "Log in as User" : "Log in as Admin");
+
 //                                        SwingUtilities.updateComponentTreeUI(sp);
                 }
             });
             //Localization of button "Add to cart"
             {
                 c.anchor = GridBagConstraints.CENTER;
-                c.fill = GridBagConstraints.HORIZONTAL;
+                c.fill = GridBagConstraints.BOTH;
+                c.insets = new Insets(10, 10, 10, 10);
                 c.gridheight = 1;
                 c.gridwidth = 1;
                 c.gridx = 0;
                 c.gridy = 6;
                 c.weighty = 0.4;
-                c.insets = new Insets(10, 10, 10, 10);
+//                c.insets = new Insets(10, 10, 10, 10);
             }
             add(user, c);
         }

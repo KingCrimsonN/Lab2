@@ -10,7 +10,6 @@ import java.io.IOException;
 
 public class ProductWindow extends JFrame {
     private Department dep = StoreWindow.getCurrent();
-    private boolean admin = StoreWindow.isAdmin();
     private static Product current = new Product("", 0, 0, "pics\\default.png");
     private String imgName = current.getImage();
     private JLabel text;
@@ -24,7 +23,7 @@ public class ProductWindow extends JFrame {
     private JTextField price = new JTextField();
     private JTextField nameF = new JTextField();
 
-    ProductWindow(String name) {
+    ProductWindow(String name, boolean admin, boolean newP, Product current) {
         super(name);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
@@ -79,7 +78,7 @@ public class ProductWindow extends JFrame {
         this.add(nameF, c);
         Icon def = new ImageIcon(current.getImage());
         if (admin) {
-            //TODO add delete button
+            //TODO arrange code
             nameF.setEditable(true);
             price.setEditable(true);
             SpinnerNumberModel spm = new SpinnerNumberModel();
@@ -122,27 +121,34 @@ public class ProductWindow extends JFrame {
                 c.weightx = 0.25;
             }
             this.add(image, c);
-            JButton del = new JButton("Delete Product");
-            buttonAppearanceSetting(del);
-            del.setHorizontalAlignment(SwingConstants.CENTER);
-            del.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dep.remove(current);
-                    dispose();
+            if (!newP) {
+                JButton del = new JButton("Delete Product");
+                buttonAppearanceSetting(del);
+                del.setHorizontalAlignment(SwingConstants.CENTER);
+                del.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int response = JOptionPane.showConfirmDialog(null,
+                                "Delete product \"" + current.getName() + "\"?", "Deleting product", JOptionPane.YES_NO_OPTION);
+                        if (response == JOptionPane.YES_OPTION) {
+                            //TODO NullPointerException if delete product while adding
+                            dep.remove(current);
+                            dispose();
+                        }
+                    }
+                });
+                //localization of button delete
+                {
+                    c.anchor = GridBagConstraints.CENTER;
+                    c.fill = GridBagConstraints.NONE;
+                    c.gridheight = 2;
+                    c.gridwidth = 1;
+                    c.gridx = 2;
+                    c.gridy = 3;
+                    c.weightx = 0.25;
                 }
-            });
-            //localization of button delete
-            {
-                c.anchor = GridBagConstraints.CENTER;
-                c.fill = GridBagConstraints.NONE;
-                c.gridheight = 2;
-                c.gridwidth = 1;
-                c.gridx = 2;
-                c.gridy = 3;
-                c.weightx = 0.25;
+                this.add(del, c);
             }
-            this.add(del, c);
             button = new JButton("Save changes");
         } else {
             //setting description field
@@ -285,7 +291,7 @@ public class ProductWindow extends JFrame {
         {
             c.gridx = 0;
             c.gridy = 3;
-            c.gridwidth = admin ? 2 : GridBagConstraints.REMAINDER;
+            c.gridwidth = admin&&!newP ? 2 : GridBagConstraints.REMAINDER;
             c.gridheight = 1;
             c.weightx = 0.0;
             c.weighty = 0.0;
@@ -294,10 +300,6 @@ public class ProductWindow extends JFrame {
             c.fill = GridBagConstraints.BOTH;
         }
         this.add(button, c);
-    }
-
-    public static void setCurrent(Product current) {
-        ProductWindow.current = current;
     }
 
     private void buttonAppearanceSetting(JButton button) {
