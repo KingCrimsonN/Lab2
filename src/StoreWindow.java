@@ -148,7 +148,8 @@ public class StoreWindow extends JFrame {
             this.removeAll();
             products = list;
             if (list==null) {
-                p.removeAll();
+                if (p!=null)
+                    p.removeAll();
                 this.update(this.getGraphics());
                 return;
             }
@@ -201,8 +202,9 @@ public class StoreWindow extends JFrame {
             department.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (department.getItemAt(1)!=null) {
+                    if (department.getItemAt(0)!=null) {
                         current = (Department) department.getSelectedItem();
+                        if (current!=null)
                         pp.set(current.getProducts());
                     }
                 }
@@ -267,10 +269,8 @@ public class StoreWindow extends JFrame {
                                     pp.set(current.getProducts());
                                 } else {
                                     department.setSelectedItem(null);
+                                    department.setEnabled(false);
                                     pp.set(null);
-                                    if(!department.getItemAt(0).equals(null)){
-                                        department.setEnabled(false);
-                                    }
                                 }
                             }
                         }
