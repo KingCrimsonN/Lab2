@@ -23,7 +23,7 @@ public class Product {
     }
 
     public String toString() {
-        return name + " " + price + " " + amount + " " + department.getName() + " " + image + " " + description + "\n";
+        return name + " " + price + " " + amount + " " + image + " " + description + "\n";
     }
 
     public void setName(String name) {
