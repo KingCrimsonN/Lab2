@@ -147,18 +147,15 @@ public class StoreWindow extends JFrame {
         void set(ArrayList<Product> list) {
             this.removeAll();
             products = list;
-            if (list==null) {
-                if (p!=null)
+            if (list == null) {
+                if (p != null)
                     p.removeAll();
                 this.update(this.getGraphics());
                 return;
             }
             for (int i = 0; i < products.size(); i++) {
                 p = new ProductButton(products.get(i), admin);
-                p.setFont(font);
-                p.setBackground(darkgray);
-                p.setForeground(white);
-                p.setBorder(BorderFactory.createLineBorder(black, 4));
+                buttonAppearanceSetting(p);
                 this.add(p);
             }
             SwingUtilities.updateComponentTreeUI(pp);
@@ -202,10 +199,10 @@ public class StoreWindow extends JFrame {
             department.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (department.getItemAt(0)!=null) {
+                    if (department.getItemAt(0) != null) {
                         current = (Department) department.getSelectedItem();
-                        if (current!=null)
-                        pp.set(current.getProducts());
+                        if (current != null)
+                            pp.set(current.getProducts());
                     }
                 }
             });
@@ -233,7 +230,7 @@ public class StoreWindow extends JFrame {
                         else if (s.checkUnique(name)) {
                             s.add(name);
                             department.addItem(s.getDepartment(s.departments.size() - 1));
-                            current=s.getDepartment(s.departments.size()-1);
+                            current = s.getDepartment(s.departments.size() - 1);
                             department.setSelectedItem(current);
                             if (!department.isEnabled()) {
                                 department.setEnabled(true);
@@ -259,11 +256,11 @@ public class StoreWindow extends JFrame {
                 delD.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (current!=null) {
+                        if (current != null) {
                             int response = JOptionPane.showConfirmDialog(null,
                                     "Delete department \"" + current.getName() + "\"?", "Deleting department", JOptionPane.YES_NO_OPTION);
                             if (response == JOptionPane.YES_OPTION) {
-                            s.remove(current);
+                                s.remove(current);
                                 if (!s.departments.isEmpty()) {
                                     department.removeItem(current);
                                     pp.set(current.getProducts());
@@ -296,9 +293,9 @@ public class StoreWindow extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         //TODO add normally product
                         Product product = new Product("", 0, 0, current, "pics\\default.png", "");
-                        ProductWindow prw = new ProductWindow("New product", admin, true, product);
                         if (s.checkUnique(product.getName())) current.add(product);
-                        if (product.name.equals("")) current.remove(product);
+                        ProductWindow prw = new ProductWindow("New product", admin, true, product);
+
                         pp.set(current.getProducts());
                     }
                 });
@@ -344,6 +341,7 @@ public class StoreWindow extends JFrame {
                 cart.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        pp.set(s.getCart());
                     }
                 });
                 //Localization of button "Add to cart"

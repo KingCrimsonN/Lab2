@@ -183,26 +183,28 @@ public class ProductWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (admin) {
-                    if (price.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter price!");
-                    else if (nameF.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter name!");
+                    if (nameF.getText().isEmpty()) JOptionPane.showMessageDialog(null, "Enter name!");
+                    else if (price.getText().isEmpty() || price.getText().equals("0"))
+                        JOptionPane.showMessageDialog(null, "Enter price!");
+                    else if ((Integer) number.getValue() == 0) JOptionPane.showMessageDialog(null, "Enter amount!");
+                    else if (!StoreWindow.s.checkUniqueProduct(nameF.getText()))
+                        JOptionPane.showMessageDialog(null, "Product " + current.getName() + " is already exists!");
                     else {
-                        //TODO or to look how to add new product here
                         current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), dep, current.getImage(), "");
-                        if (StoreWindow.s.checkUnique(current.getName())) dep.add(current);
-                        else
-                            JOptionPane.showMessageDialog(null, "Product " + current.getName() + " is already exists!");
+                        dep.add(current);
+                                                dispose();
                     }
                 } else {
-                    current.setAmount(current.getAmount()-(Integer) number.getValue());
-                        for (int i=0; i<StoreWindow.s.getCart().size();i++){
-                            if (current.equals(StoreWindow.s.getCart().get(i).getName())) {
-                                StoreWindow.s.cart.get(i).setAmount(StoreWindow.s.getCart().get(i).getAmount() + (Integer) number.getValue());
-                                return;
-                            }
+                    current.setAmount(current.getAmount() - (Integer) number.getValue());
+                    for (int i = 0; i < StoreWindow.s.getCart().size(); i++) {
+                        if (current.equals(StoreWindow.s.getCart().get(i).getName())) {
+                            StoreWindow.s.cart.get(i).setAmount(StoreWindow.s.getCart().get(i).getAmount() + (Integer) number.getValue());
+                            return;
                         }
-                    StoreWindow.s.addToCart(new Product(current.getName(),current.getPrice(),(Integer) number.getValue(), dep,current.getImage(),""));
+                    }
+                    StoreWindow.s.addToCart(new Product(current.getName(), current.getPrice(), (Integer) number.getValue(), dep, current.getImage(), ""));
+                    dispose();
                 }
-                dispose();
             }
         });
         text = new JLabel("Price:");
