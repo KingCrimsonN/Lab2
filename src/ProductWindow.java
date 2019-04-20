@@ -188,7 +188,7 @@ public class ProductWindow extends JFrame {
                         JOptionPane.showMessageDialog(null, "Enter price!");
                     else if ((Integer) number.getValue() == 0) JOptionPane.showMessageDialog(null, "Enter amount!");
                     else if (!StoreWindow.s.checkUniqueProduct(nameF.getText()))
-                        JOptionPane.showMessageDialog(null, "Product " + current.getName() + " is already exists!");
+                        JOptionPane.showMessageDialog(null, "Product " + nameF.getText() + " is already exists!");
                     else {
                         current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), dep, current.getImage(), "");
                         dep.add(current);
