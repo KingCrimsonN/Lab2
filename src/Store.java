@@ -11,6 +11,10 @@ public class Store {
     public void addToCart(Product prod){
         cart.add(prod);
     }
+    
+    public void removeFromCart(Product prod){
+        cart.remove(prod);
+    }
 
     public ArrayList<Product> getCart(){
         return cart;
