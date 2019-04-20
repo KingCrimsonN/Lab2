@@ -39,8 +39,14 @@ public class Store {
         return null;
     }
     
+    public Department searchByName(String sName){
+        Department searchDepartment = new Department("Search Results");
+        searchDepartment.products = SearchUtilit.findByName(getAllProducts(),sName);
+        return searchDepartment;
+    }
+    
     public Department searchByName(Department dep, String sName){
-        Department searchDepartment = dep;
+        Department searchDepartment = new Department("Search Results");
         searchDepartment.products = SearchUtilit.findByName(dep.products,sName);
         return searchDepartment;
     }
@@ -55,6 +61,7 @@ public class Store {
         ArrayList<Product> products = new ArrayList<>();
         departments.forEach(department -> products.addAll(department.getProducts()));
         if (products.size() == 0) return null;
+        SortUtilit.sortByName(products);
         return products;
     }
 
