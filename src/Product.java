@@ -9,6 +9,15 @@ public class Product {
 
     private boolean isInCart;
 
+    /**
+     * A  fully customized product constructor
+     * @param nName new name
+     * @param nPrice new price
+     * @param val new amount
+     * @param dep new department
+     * @param nImage new image
+     * @param desc new description
+     */
     Product(String nName, int nPrice, int val, Department dep, String nImage, String desc) {
         edit(nName, nPrice, val, dep, nImage, desc);
     }
@@ -33,6 +42,15 @@ public class Product {
         return department;
     }
 
+    /**
+     * A fully customized change of product field values
+     * @param nName new name
+     * @param nPrice new price
+     * @param val new amount
+     * @param dep new department
+     * @param nImage new image
+     * @param desc new description
+     */
     public void edit(String nName, int nPrice, int val, Department dep, String nImage, String desc) {
         name = nName;
         price = nPrice;
@@ -42,6 +60,11 @@ public class Product {
         description = desc;
     }
 
+    /**
+     * Compares a string with product's name (useful for checking if a new name is unique)
+     * @param n - name to check with product's one
+     * @return the result of comparison (boolean)
+     */
     public boolean equals(String n) {
         if (name.equals(n))
             return true;
