@@ -84,7 +84,7 @@ public class FileInput {
                         image = temp;
                         while (tkn.hasMoreTokens()){
                             temp = tkn.nextToken();
-                            desc+=temp;
+                             desc+=temp + " ";
                         }
                         Product prod = new Product(nam,price,val,st.getDepartment(depNum),image,desc);
                         st.getDepartment(depNum).add(prod);
