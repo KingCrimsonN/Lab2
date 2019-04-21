@@ -28,6 +28,14 @@ public class Store {
             }
         }
     }
+    
+     public int cartPrice(){
+        int res=0;
+        for (int i=0; i<cart.size(); i++){
+            res+=cart.get(i).getPrice()*cart.get(i).getAmount();
+        }
+        return res;
+    }
 
     public ArrayList<Product> getCart(){
         return cart;
