@@ -4,34 +4,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 public class StoreWindow extends JFrame {
-    private static ProductWindow pw;
-
-    public static Department getCurrent() {
-        return current;
-    }
-
-    private static Department current;
-
-    public static boolean isAdmin() {
-        return admin;
-    }
-
-    private static boolean admin = true;
     static Store s = FileInput.readConfig("config.ttt");
+    private static ProductWindow pw;
+    private static Department current;
+    private static boolean admin = true;
     private Font font;
     private Color black = new Color(30, 28, 31);
     private Color darkgray = new Color(86, 86, 86);
     private Color gray = new Color(155, 155, 155);
     private Color white = new Color(213, 213, 213);
     private SidePanel sp;
-
-    public ProductPane getPp() {
-        return pp;
-    }
-
     private ProductPane pp = new ProductPane();
     private JTextField find;
     private JLabel l;
@@ -139,9 +125,28 @@ public class StoreWindow extends JFrame {
         add(new JScrollPane(pp), c);
     }
 
+    public static Department getCurrent() {
+        return current;
+    }
+
+    public static boolean isAdmin() {
+        return admin;
+    }
+
     public static void main(String[] args) {
         StoreWindow sw = new StoreWindow("MINECRAFT IS MY LIFE");
         sw.setVisible(true);
+    }
+
+    public ProductPane getPp() {
+        return pp;
+    }
+
+    private void buttonAppearanceSetting(JButton button) {
+        button.setFont(font);
+        button.setBackground(darkgray);
+        button.setForeground(white);
+        button.setBorder(BorderFactory.createLineBorder(black, 4));
     }
 
     class ProductPane extends JPanel {
@@ -205,6 +210,7 @@ public class StoreWindow extends JFrame {
             }
             add(pickDep, c);
             JButton addP = new JButton("Add new product");
+            JButton stats = new JButton("Get Stats");
             //setting JComboBox
             department = new JComboBox<Department>();
             for (Department d : s.departments) department.addItem(d);
@@ -220,6 +226,7 @@ public class StoreWindow extends JFrame {
                         if (current != null)
                             pp.set(current.getProducts());
                         if (!addP.isEnabled()) addP.setEnabled(true);
+                        if (!stats.isEnabled()) stats.setEnabled(true);
                     }
                 }
             });
@@ -256,6 +263,7 @@ public class StoreWindow extends JFrame {
                             }
                             if (!addP.isEnabled()) addP.setEnabled(true);
                             if (!delD.isEnabled()) delD.setEnabled(true);
+                            if (!stats.isEnabled()) stats.setEnabled(true);
                         } else JOptionPane.showMessageDialog(null, "Department \"" + name + "\" already exists!");
                     }
                 });
@@ -288,6 +296,7 @@ public class StoreWindow extends JFrame {
                                     department.setEnabled(false);
                                     addP.setEnabled(false);
                                     delD.setEnabled(false);
+                                    stats.setEnabled(false);
                                     pp.set(null);
                                 }
                             }
@@ -330,6 +339,29 @@ public class StoreWindow extends JFrame {
                     c.weighty = 0.4;
                 }
                 add(addP, c);
+                if (current == null) addP.setEnabled(false);
+                buttonAppearanceSetting(stats);
+                if (current == null) stats.setEnabled(false);
+                stats.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        JOptionPane.showMessageDialog(null, "Products in department \"" + current.getName() + "\": " + current.getProducts().size() +
+                                "\nTotal price of department: " + NumberFormat.getNumberInstance().format(current.groupPrice()) + " ol'mazi\nAll products: " +
+                                s.getAllProducts().size() + "\nTotal price of the shop: " + NumberFormat.getNumberInstance().format(s.totalPrice()) + " ol'mazi", "Stats", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                });
+                //Localization of button "Get stats"
+                {
+                    c.anchor = GridBagConstraints.CENTER;
+                    c.fill = GridBagConstraints.BOTH;
+                    c.insets = new Insets(10, 10, 10, 10);
+                    c.gridheight = 1;
+                    c.gridwidth = 1;
+                    c.gridx = 0;
+                    c.gridy = 5;
+                    c.weighty = 0.4;
+                }
+                add(stats, c);
                 JButton save = new JButton("Save into file");
                 buttonAppearanceSetting(save);
                 save.addActionListener(new ActionListener() {
@@ -346,7 +378,7 @@ public class StoreWindow extends JFrame {
                     c.gridheight = 1;
                     c.gridwidth = 1;
                     c.gridx = 0;
-                    c.gridy = 5;
+                    c.gridy = 6;
                     c.weighty = 0.4;
                 }
                 add(save, c);
@@ -381,11 +413,11 @@ public class StoreWindow extends JFrame {
                 add(cart, c);
                 JButton buy = new JButton("Purchase");
                 buttonAppearanceSetting(buy);
-                if(s.getCart().size()==0)buy.setEnabled(false);
+                if (s.getCart().size() == 0) buy.setEnabled(false);
                 buy.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        int response = JOptionPane.showConfirmDialog(null, "Products: " + s.getCart().size() + "\nTotal price: " + s.cartPrice() + " ol'mazi \nWant to purchase?");
+                        int response = JOptionPane.showConfirmDialog(null, "Products: " + s.getCart().size() + "\nTotal price: " + s.cartPrice() + " ol'mazi\nWant to purchase?");
                         if (response == JOptionPane.YES_OPTION) {
                             s.purchase();
                             pp.set(s.getCart());
@@ -427,18 +459,11 @@ public class StoreWindow extends JFrame {
                 c.gridheight = 1;
                 c.gridwidth = 1;
                 c.gridx = 0;
-                c.gridy = 6;
+                c.gridy = 7;
                 c.weighty = 0.4;
 //                c.insets = new Insets(10, 10, 10, 10);
             }
             add(user, c);
         }
-    }
-
-    private void buttonAppearanceSetting(JButton button) {
-        button.setFont(font);
-        button.setBackground(darkgray);
-        button.setForeground(white);
-        button.setBorder(BorderFactory.createLineBorder(black, 4));
     }
 }
