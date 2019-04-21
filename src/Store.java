@@ -25,9 +25,12 @@ public class Store {
                 if (cartProduct.equals(product.getName())){
                     product.setAmount(product.getAmount() - cartProduct.getAmount());
                     cartProduct.setAmount(0);
-                    cart.remove(cartProduct);
                 }
             }
+        }
+        for (int i = 0; i < cart.size(); i++){
+            if(cart.get(i).getAmount()==0)
+                cart.remove(i);
         }
     }
     
