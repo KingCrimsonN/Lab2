@@ -20,11 +20,12 @@ public class Store {
     
      public void purchase(){
         ArrayList<Product> prods = getAllProducts();
-       for (Product cartProduct:cart){
+        for (Product cartProduct:cart){
             for (Product product:prods){
                 if (cartProduct.equals(product.getName())){
                     product.setAmount(product.getAmount() - cartProduct.getAmount());
                     cartProduct.setAmount(0);
+                    cart.remove(cartProduct);
                 }
             }
         }
