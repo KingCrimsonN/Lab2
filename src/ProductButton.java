@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 public class ProductButton extends JButton {
     Product p;
 
-    ProductButton(Product product, boolean admin) {
+    ProductButton(StoreWindow sw, Product product, boolean admin) {
         super();
         this.p = product;
         Icon icon = new ImageIcon(p.getImage());
@@ -19,7 +19,7 @@ public class ProductButton extends JButton {
                 if (p.getAmount() == 0 && !StoreWindow.isAdmin())
                     JOptionPane.showMessageDialog(null, "Sorry.. Product is not available now..", "Info", JOptionPane.PLAIN_MESSAGE);
                 else {
-                    ProductWindow prw = new ProductWindow(p.getName(), admin, false, p);
+                    ProductWindow prw = new ProductWindow(sw, p.getName(), admin, false, p);
                 }
             }
         });

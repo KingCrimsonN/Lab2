@@ -26,8 +26,9 @@ public class ProductWindow extends JFrame {
     private JTextField total = new JTextField();
     private JTextPane description = new JTextPane();
 
-    ProductWindow(String name, boolean admin, boolean newP, Product current) {
+    ProductWindow(StoreWindow sw, String name, boolean admin, boolean newP, Product current) {
         super(name);
+        sw.setEnabled(false);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("minecraft.ttf")));
@@ -37,7 +38,7 @@ public class ProductWindow extends JFrame {
             e.printStackTrace();
         }
         font = new Font("minecraft", Font.PLAIN, 16);
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.setVisible(true);
         this.getContentPane().setBackground(darkgray);
         this.setSize(600, 400);
@@ -78,7 +79,7 @@ public class ProductWindow extends JFrame {
             c.gridwidth = 1;
             c.gridx = 1;
             c.gridy = 0;
-                        c.weighty = 0.1;
+            c.weighty = 0.1;
             c.insets = new Insets(0, 10, 0, 0);
         }
         this.add(nameF, c);
@@ -138,6 +139,8 @@ public class ProductWindow extends JFrame {
                                 "Delete product \"" + current.getName() + "\"?", "Deleting product", JOptionPane.YES_NO_OPTION);
                         if (response == JOptionPane.YES_OPTION) {
                             dep.remove(current);
+                            sw.setEnabled(true);
+                            sw.getPp().set(dep.getProducts());
                             dispose();
                         }
                     }
@@ -175,6 +178,7 @@ public class ProductWindow extends JFrame {
             text.setBackground(darkgray);
             text.setForeground(white);
             text.setHorizontalAlignment(SwingConstants.CENTER);
+            //localization of image label
             {
                 c.anchor = GridBagConstraints.CENTER;
                 c.fill = GridBagConstraints.NONE;
@@ -185,6 +189,36 @@ public class ProductWindow extends JFrame {
                 c.weightx = 0.25;
             }
             this.add(text, c);
+            if (current.isInCart()) {
+                JButton delFromCart = new JButton("Delete from Cart");
+                buttonAppearanceSetting(delFromCart);
+                delFromCart.setHorizontalAlignment(SwingConstants.CENTER);
+                delFromCart.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int response = JOptionPane.showConfirmDialog(null,
+                                "Delete product \"" + current.getName() + "\" from cart?", "Deleting product", JOptionPane.YES_NO_OPTION);
+                        if (response == JOptionPane.YES_OPTION) {
+                            StoreWindow.s.removeFromCart(current);
+                            sw.setEnabled(true);
+                            sw.getPp().set(dep.getProducts());
+                            dispose();
+                        }
+                    }
+                });
+                //localization of button delete
+                {
+                    c.anchor = GridBagConstraints.CENTER;
+                    c.fill = GridBagConstraints.BOTH;
+                    c.insets = new Insets(20, 10, 10, 10);
+                    c.gridheight = 1;
+                    c.gridwidth = 1;
+                    c.gridx = 2;
+                    c.gridy = 5;
+                    c.weightx = 0.25;
+                }
+                this.add(delFromCart, c);
+            }
         }
         //button listener
         button.addActionListener(new ActionListener() {
@@ -200,20 +234,44 @@ public class ProductWindow extends JFrame {
                     else {
                         current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), dep, current.getImage(), description.getText());
                         dep.add(current);
+                        sw.setEnabled(true);
+                        sw.getPp().set(dep.getProducts());
                         dispose();
                     }
+                } else if (current.isInCart()) {
+                    int a = StoreWindow.s.getCart().indexOf(current);
+                    StoreWindow.s.cart.get(a).setAmount((Integer) number.getValue());
+//                    for (int i = 0; i < dep.getProducts().size(); i++) {
+//                        if (current.equals(dep.getProducts().get(i).getName())) {
+//                            dep.getProducts().get(i).setAmount(StoreWindow.s.getCart().get(i).getAmount() + (Integer) number.getValue());
+//                            sw.setEnabled(true);
+//                            sw.getPp().set(dep.getProducts());
+//                            dispose();
+//                            return;
+//                        }
+//                    }
+                    button.setText("Save changes in cart");
+                    sw.setEnabled(true);
+                    sw.getPp().set(dep.getProducts());
+                    dispose();
                 } else {
                     current.setAmount(current.getAmount() - (Integer) number.getValue());
                     for (int i = 0; i < StoreWindow.s.getCart().size(); i++) {
                         if (current.equals(StoreWindow.s.getCart().get(i).getName())) {
                             StoreWindow.s.cart.get(i).setAmount(StoreWindow.s.getCart().get(i).getAmount() + (Integer) number.getValue());
+                            sw.setEnabled(true);
+                            sw.getPp().set(dep.getProducts());
+                            dispose();
                             return;
                         }
                     }
                     if ((Integer) number.getValue() != 0) {
                         StoreWindow.s.addToCart(new Product(current.getName(), current.getPrice(), (Integer) number.getValue(), dep, current.getImage(), description.getText()));
+                        StoreWindow.s.getCart().get(StoreWindow.s.getCart().size() - 1).addToCart();
+                        sw.setEnabled(true);
+                        sw.getPp().set(dep.getProducts());
                         dispose();
-                    }else JOptionPane.showMessageDialog(null, "Enter amount", "Warning", JOptionPane.WARNING_MESSAGE);
+                    } else JOptionPane.showMessageDialog(null, "Enter amount", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
@@ -392,7 +450,7 @@ public class ProductWindow extends JFrame {
         {
             c.gridx = 0;
             c.gridy = 5;
-            c.gridwidth = admin && !newP ? 2 : GridBagConstraints.REMAINDER;
+            c.gridwidth = admin && !newP || current.isInCart() ? 2 : GridBagConstraints.REMAINDER;
             c.gridheight = 1;
             c.weightx = 0.0;
             c.weighty = 0.0;

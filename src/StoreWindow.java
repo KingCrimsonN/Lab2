@@ -27,6 +27,11 @@ public class StoreWindow extends JFrame {
     private Color gray = new Color(155, 155, 155);
     private Color white = new Color(213, 213, 213);
     private SidePanel sp;
+
+    public ProductPane getPp() {
+        return pp;
+    }
+
     private ProductPane pp = new ProductPane();
     private JTextField find;
     private JLabel l;
@@ -159,7 +164,7 @@ public class StoreWindow extends JFrame {
                 return;
             }
             for (int i = 0; i < products.size(); i++) {
-                p = new ProductButton(products.get(i), admin);
+                p = new ProductButton(StoreWindow.this, products.get(i), admin);
                 buttonAppearanceSetting(p);
                 this.add(p);
             }
@@ -309,7 +314,7 @@ public class StoreWindow extends JFrame {
                         //TODO add normally product
                         Product product = new Product("", 0, 0, current, "pics\\default.png", "");
                         if (s.checkUnique(product.getName())) current.add(product);
-                        ProductWindow prw = new ProductWindow("New product", admin, true, product);
+                        ProductWindow prw = new ProductWindow(StoreWindow.this, "New product", admin, true, product);
                         pp.set(current.getProducts());
                     }
                 });
@@ -372,10 +377,33 @@ public class StoreWindow extends JFrame {
                     c.gridx = 0;
                     c.gridy = 3;
                     c.weighty = 0.4;
-                    c.insets = new Insets(10, 10, 10, 10);
                 }
                 add(cart, c);
-
+                JButton buy = new JButton("Purchase");
+                buttonAppearanceSetting(buy);
+                if(s.getCart().size()==0)buy.setEnabled(false);
+                buy.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int response = JOptionPane.showConfirmDialog(null, "Products: " + s.getCart().size() + "\nTotal price: " + s.cartPrice() + " ol'mazi \nWant to purchase?");
+                        if (response == JOptionPane.YES_OPTION) {
+                            s.purchase();
+                            pp.set(s.getCart());
+                        }
+                    }
+                });
+                //Localization of button "Purchase"
+                {
+                    c.anchor = GridBagConstraints.CENTER;
+                    c.fill = GridBagConstraints.BOTH;
+                    c.insets = new Insets(10, 10, 10, 10);
+                    c.gridheight = 1;
+                    c.gridwidth = 1;
+                    c.gridx = 0;
+                    c.gridy = 4;
+                    c.weighty = 0.4;
+                }
+                add(buy, c);
             }
             user = new JButton();
             user.setText(admin ? "Log in as User" : "Log in as Admin");
@@ -384,6 +412,7 @@ public class StoreWindow extends JFrame {
             user.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    if (admin) FileInput.saveFile(s.toString());
                     admin = !admin;
                     user.setText(admin ? "Log in as User" : "Log in as Admin");
                     sp.set();

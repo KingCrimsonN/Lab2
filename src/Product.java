@@ -2,6 +2,11 @@ public class Product {
     private String name, image, description;
     private int amount, price;
     private Department department;
+
+    public boolean isInCart() {
+        return isInCart;
+    }
+
     private boolean isInCart;
 
     Product(String nName, int nPrice, int val, Department dep, String nImage, String desc) {
