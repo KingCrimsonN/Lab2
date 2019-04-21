@@ -9,20 +9,18 @@ import java.util.ArrayList;
 
 public class StoreWindow extends JFrame {
     static Store s = FileInput.readConfig("config.ttt");
-    private static ProductWindow pw;
-    private static Department current;
+    private Department current;
     private static boolean admin = true;
     private Font font;
     private Color black = new Color(30, 28, 31);
     private Color darkgray = new Color(86, 86, 86);
     private Color gray = new Color(155, 155, 155);
     private Color white = new Color(213, 213, 213);
-    private SidePanel sp;
+    private SidePane sp;
     private ProductPane pp = new ProductPane();
     private JTextField find;
     private JLabel l;
     private JButton search;//button to search for product
-    private JButton bag;//button to look in your bag
 
     StoreWindow(String name) {
         super(name);
@@ -109,7 +107,7 @@ public class StoreWindow extends JFrame {
             c.weightx = 0.15;
             c.weighty = 0.8;
         }
-        sp = new SidePanel();
+        sp = new SidePane();
         add(sp, c);
         //localization of panel of products
         {
@@ -125,10 +123,6 @@ public class StoreWindow extends JFrame {
         JScrollPane jsp = new JScrollPane(pp);
         jsp.getVerticalScrollBar().setUnitIncrement(16);
         add(jsp, c);
-    }
-
-    public static Department getCurrent() {
-        return current;
     }
 
     public static boolean isAdmin() {
@@ -179,12 +173,12 @@ public class StoreWindow extends JFrame {
         }
     }
 
-    class SidePanel extends JPanel {
+    class SidePane extends JPanel {
         private JLabel pickDep;
         private JButton user;
         private JComboBox<Department> department;
 
-        SidePanel() {
+        SidePane() {
             super();
             this.setBackground(darkgray);
             this.setLayout(new GridBagLayout());
@@ -213,6 +207,7 @@ public class StoreWindow extends JFrame {
             add(pickDep, c);
             JButton addP = new JButton("Add new product");
             JButton stats = new JButton("Get Stats");
+            JButton buy = new JButton("Purchase");
             //setting JComboBox
             department = new JComboBox<Department>();
             for (Department d : s.departments) department.addItem(d);
@@ -229,6 +224,7 @@ public class StoreWindow extends JFrame {
                             pp.set(current.getProducts());
                         if (!addP.isEnabled()) addP.setEnabled(true);
                         if (!stats.isEnabled()) stats.setEnabled(true);
+                        buy.setEnabled(false);
                     }
                 }
             });
@@ -315,14 +311,12 @@ public class StoreWindow extends JFrame {
                     c.gridx = 0;
                     c.gridy = 3;
                     c.weighty = 0.4;
-//                    c.insets = new Insets(40, 20, 40, 20);
                 }
                 add(delD, c);
                 buttonAppearanceSetting(addP);
                 addP.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        //TODO add normally product
                         Product product = new Product("", 0, 0, current, "pics\\default.png", "");
                         if (s.checkUnique(product.getName())) current.add(product);
                         ProductWindow prw = new ProductWindow(StoreWindow.this, "New product", admin, true, product);
@@ -389,7 +383,6 @@ public class StoreWindow extends JFrame {
                     delD.setEnabled(false);
                 }
             } else {
-                JButton buy = new JButton("Purchase");
                 JButton cart = new JButton();
                 Icon icon = new ImageIcon("pics\\minecart.png");
                 cart.setIcon(icon);
