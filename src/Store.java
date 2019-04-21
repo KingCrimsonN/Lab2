@@ -17,6 +17,17 @@ public class Store {
         cart.remove(prod);
         prod.removeFromCart();
     }
+    
+     public void purchase(){
+        ArrayList<Product> prods = getAllProducts();
+        for (int i=0;i<cart.size();i++){
+            for (int j=0;j<prods.size();j++){
+                if (cart.get(i).equals(prods.get(j).getName()))
+                    prods.get(j).setAmount(prods.get(j).getAmount()-cart.get(i).getAmount());
+                    cart.get(i).setAmount(0);
+            }
+        }
+    }
 
     public ArrayList<Product> getCart(){
         return cart;
