@@ -22,7 +22,7 @@ public class Department {
     public void edit(Product prod, String name, int val, int price, String img, String desc) {
         if (checkUnique(name))
             for (int i = 0; i < products.size(); i++) {
-                if (prod.name.equals(products.get(i)))
+                if (prod.getName().equals(products.get(i)))
                     products.get(i).edit(name, price, val, this , img ,desc);
             }
     }
