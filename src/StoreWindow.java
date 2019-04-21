@@ -428,6 +428,7 @@ public class StoreWindow extends JFrame {
                         int response = JOptionPane.showConfirmDialog(null, "Products: " + s.getCart().size() + "\nTotal price: " + s.cartPrice() + " ol'mazi\nWant to purchase?");
                         if (response == JOptionPane.YES_OPTION) {
                             s.purchase();
+                            FileInput.saveFile(s.toString());
                             buy.setEnabled(false);
                             pp.set(s.getCart());
                         }
