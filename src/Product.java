@@ -2,9 +2,22 @@ public class Product {
     private String name, image, description;
     private int amount, price;
     private Department department;
+    private boolean isInCart;
 
     Product(String nName, int nPrice, int val, Department dep, String nImage, String desc) {
         edit(nName, nPrice, val, dep, nImage, desc);
+    }
+
+    public boolean checkCart(){
+        return isInCart;
+    }
+
+    public void addToCart(){
+        isInCart=true;
+    }
+
+    public void removeFromCart(){
+        isInCart=false;
     }
 
     public String getDescription() {
