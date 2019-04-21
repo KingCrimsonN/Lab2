@@ -8,12 +8,14 @@ public class Store {
         departments.add(new Department(name));
     }
     
-    public void addToCart(Product prod){
+     public void addToCart(Product prod){
         cart.add(prod);
+        prod.addToCart();
     }
-    
+
     public void removeFromCart(Product prod){
         cart.remove(prod);
+        prod.removeFromCart();
     }
 
     public ArrayList<Product> getCart(){
