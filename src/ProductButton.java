@@ -2,9 +2,22 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * File: ProductButton.java
+ *
+ * @author Lena Kurenkova
+ * Class of button product
+ */
 public class ProductButton extends JButton {
     Product p;
 
+    /**
+     * Create product button
+     *
+     * @param sw      parent window of store
+     * @param product Product
+     * @param admin   admin/user
+     */
     ProductButton(StoreWindow sw, Product product, boolean admin) {
         super();
         this.p = product;

@@ -10,21 +10,36 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * File: ProductWindow.java
+ *
+ * @author Lena Kurenkova
+ * Window of product
+ */
 public class ProductWindow extends JFrame {
-    private Department dep;
-    private JLabel text;
-    private Font font;
+    private Department dep;//department of current product
+    private JLabel text;//all labels
+    private Font font;//font
     private Color black = new Color(30, 28, 31);
     private Color darkgray = new Color(86, 86, 86);
     private Color gray = new Color(155, 155, 155);
     private Color white = new Color(213, 213, 213);
-    private JButton button;
-    private JSpinner number;
-    private JTextField price = new JTextField();
-    private JTextField nameF = new JTextField();
-    private JTextField total = new JTextField();
-    private JTextPane description = new JTextPane();
+    private JButton button;//button "Save changes"/"Add to cart"
+    private JSpinner number;//amount of product
+    private JTextField price = new JTextField();//field price of product
+    private JTextField nameF = new JTextField();//field name of product
+    private JTextField total = new JTextField();//field total = price*amount
+    private JTextPane description = new JTextPane();//pane with description
 
+    /**
+     * Creates window of current product
+     *
+     * @param sw      parent window of store
+     * @param name    title of the windiw (name of product)
+     * @param admin   admin/user
+     * @param newP    true if creating a new product
+     * @param current Product
+     */
     ProductWindow(StoreWindow sw, String name, boolean admin, boolean newP, Product current) {
         super(name);
         sw.setEnabled(false);
@@ -69,7 +84,7 @@ public class ProductWindow extends JFrame {
         nameF.setBorder(BorderFactory.createLineBorder(black, 4));
         nameF.setMinimumSize(new Dimension(100, 30));
         nameF.setPreferredSize(new Dimension(100, 30));
-        //localization of price field
+        //localization of name field
         {
             c.anchor = GridBagConstraints.WEST;
             c.fill = GridBagConstraints.HORIZONTAL;

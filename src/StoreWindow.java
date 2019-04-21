@@ -7,21 +7,32 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
+/**
+ * File: StoreWindow.java
+ *
+ * @author Lena Kurenkova
+ * Window of store
+ */
 public class StoreWindow extends JFrame {
     static Store s = FileInput.readConfig("config.ttt");
-    private Department current;
-    private static boolean admin = true;
-    private Font font;
+    private Department current;//current department
+    private static boolean admin = false;//admin/user
+    private Font font;//font
     private Color black = new Color(30, 28, 31);
     private Color darkgray = new Color(86, 86, 86);
     private Color gray = new Color(155, 155, 155);
     private Color white = new Color(213, 213, 213);
-    private SidePane sp;
-    private ProductPane pp = new ProductPane();
-    private JTextField find;
-    private JLabel l;
+    private SidePane sp;//sidepane with all buttons
+    private ProductPane pp = new ProductPane();//product pane
+    private JTextField find;//text field for searching products
+    private JLabel l;//label
     private JButton search;//button to search for product
 
+    /**
+     * Creates window
+     *
+     * @param name title
+     */
     StoreWindow(String name) {
         super(name);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -130,7 +141,7 @@ public class StoreWindow extends JFrame {
     }
 
     public static void main(String[] args) {
-        StoreWindow sw = new StoreWindow("MINECRAFT IS MY LIFE");
+        StoreWindow sw = new StoreWindow("EnderShop");
         sw.setVisible(true);
     }
 
