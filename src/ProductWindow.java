@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +23,8 @@ public class ProductWindow extends JFrame {
     private JSpinner number;
     private JTextField price = new JTextField();
     private JTextField nameF = new JTextField();
-    private JTextArea description = new JTextArea();
+    private JTextField total = new JTextField();
+    private JTextPane description = new JTextPane();
 
     ProductWindow(String name, boolean admin, boolean newP, Product current) {
         super(name);
@@ -37,7 +40,7 @@ public class ProductWindow extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setVisible(true);
         this.getContentPane().setBackground(darkgray);
-        this.setSize(600, 300);
+        this.setSize(600, 400);
         this.getContentPane().setLayout(new GridBagLayout());
 //        this.current = current;
         this.dep = current.getDepartment();
@@ -76,6 +79,7 @@ public class ProductWindow extends JFrame {
             c.gridx = 1;
             c.gridy = 0;
             c.weightx = 0.25;
+            c.insets = new Insets(0, 10, 0, 0);
         }
         this.add(nameF, c);
         Icon def = new ImageIcon(current.getImage());
@@ -141,11 +145,12 @@ public class ProductWindow extends JFrame {
                 //localization of button delete
                 {
                     c.anchor = GridBagConstraints.CENTER;
-                    c.fill = GridBagConstraints.NONE;
-                    c.gridheight = 2;
+                    c.fill = GridBagConstraints.BOTH;
+                    c.insets = new Insets(20, 10, 10, 10);
+                    c.gridheight = 1;
                     c.gridwidth = 1;
                     c.gridx = 2;
-                    c.gridy = 4;
+                    c.gridy = 5;
                     c.weightx = 0.25;
                 }
                 this.add(del, c);
@@ -193,7 +198,7 @@ public class ProductWindow extends JFrame {
                     else if (!StoreWindow.s.checkUniqueProduct(nameF.getText()) && !nameF.getText().equals(current.getName()))
                         JOptionPane.showMessageDialog(null, "Product " + nameF.getText() + " is already exists!");
                     else {
-                        current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), dep, current.getImage(), "");
+                        current.edit(nameF.getText(), Integer.valueOf(price.getText()), (Integer) number.getValue(), dep, current.getImage(), description.getText());
                         dep.add(current);
                         dispose();
                     }
@@ -205,7 +210,7 @@ public class ProductWindow extends JFrame {
                             return;
                         }
                     }
-                    StoreWindow.s.addToCart(new Product(current.getName(), current.getPrice(), (Integer) number.getValue(), dep, current.getImage(), ""));
+                    StoreWindow.s.addToCart(new Product(current.getName(), current.getPrice(), (Integer) number.getValue(), dep, current.getImage(), description.getText()));
                     dispose();
                 }
             }
@@ -287,6 +292,13 @@ public class ProductWindow extends JFrame {
         number.setMinimumSize(new Dimension(100, 30));
         number.setPreferredSize(new Dimension(100, 30));
         number.setMaximumSize(new Dimension(100, 30));
+        number.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                total.setText("" + Integer.valueOf(price.getText()) * (Integer) number.getValue());
+            }
+        });
         //localization of spinner
         {
             c.anchor = GridBagConstraints.WEST;
@@ -298,6 +310,43 @@ public class ProductWindow extends JFrame {
             c.weightx = 0.25;
         }
         this.add(number, c);
+        text = new JLabel("Total:");
+        text.setFont(font);
+        text.setBackground(darkgray);
+        text.setForeground(white);
+        text.setHorizontalAlignment(SwingConstants.RIGHT);
+        //localization of label "Total"
+        {
+            c.anchor = GridBagConstraints.EAST;
+            c.fill = GridBagConstraints.NONE;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.gridx = 0;
+            c.gridy = 3;
+            c.weightx = 0.25;
+            c.weighty = 0.1;
+        }
+        this.add(text, c);
+        total.setFont(font);
+        total.setBackground(darkgray);
+        total.setForeground(white);
+        total.setHorizontalAlignment(SwingConstants.RIGHT);
+        total.setBorder(BorderFactory.createLineBorder(black, 4));
+        total.setMinimumSize(new Dimension(100, 30));
+        total.setPreferredSize(new Dimension(100, 30));
+        total.setMaximumSize(new Dimension(100, 30));
+        //localization of label counting total price
+        {
+            c.anchor = GridBagConstraints.WEST;
+            c.fill = GridBagConstraints.NONE;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.gridx = 1;
+            c.gridy = 3;
+            c.weightx = 0.25;
+            c.weighty = 0.1;
+        }
+        this.add(total, c);
         text = new JLabel("Description:");
         text.setHorizontalAlignment(SwingConstants.RIGHT);
         text.setFont(font);
@@ -310,14 +359,12 @@ public class ProductWindow extends JFrame {
             c.gridheight = 1;
             c.gridwidth = 1;
             c.gridx = 0;
-            c.gridy = 3;
+            c.gridy = 4;
             c.weightx = 0.25;
             c.weighty = 0.1;
         }
         this.add(text, c);
         description.setText(current.getDescription());
-        description.setLineWrap(true);
-        description.setWrapStyleWord(true);
         description.setFont(font);
         description.setBackground(darkgray);
         description.setForeground(white);
@@ -330,10 +377,11 @@ public class ProductWindow extends JFrame {
             c.anchor = GridBagConstraints.WEST;
             c.fill = GridBagConstraints.HORIZONTAL;
             c.gridheight = 1;
-            c.gridwidth = 1;
+            c.gridwidth = GridBagConstraints.REMAINDER;
             c.gridx = 1;
-            c.gridy = 3;
-            c.weightx = 0.25;
+            c.gridy = 4;
+            c.weighty = 0.2;
+            c.insets = new Insets(0, 0, 0, 10);
         }
         this.add(new JScrollPane(description), c);
         buttonAppearanceSetting(button);
@@ -341,14 +389,14 @@ public class ProductWindow extends JFrame {
         //localization of the button
         {
             c.gridx = 0;
-            c.gridy = 4;
+            c.gridy = 5;
             c.gridwidth = admin && !newP ? 2 : GridBagConstraints.REMAINDER;
             c.gridheight = 1;
             c.weightx = 0.0;
             c.weighty = 0.0;
             c.anchor = GridBagConstraints.CENTER;
-            c.insets = new Insets(20, 10, 10, 10);
             c.fill = GridBagConstraints.BOTH;
+            c.insets = new Insets(20, 10, 10, 10);
         }
         this.add(button, c);
     }
