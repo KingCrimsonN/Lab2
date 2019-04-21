@@ -122,7 +122,9 @@ public class StoreWindow extends JFrame {
             c.weightx = 0.85;
             c.weighty = 0.8;
         }
-        add(new JScrollPane(pp), c);
+        JScrollPane jsp = new JScrollPane(pp);
+        jsp.getVerticalScrollBar().setUnitIncrement(16);
+        add(jsp, c);
     }
 
     public static Department getCurrent() {
