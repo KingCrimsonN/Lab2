@@ -387,6 +387,7 @@ public class StoreWindow extends JFrame {
                     delD.setEnabled(false);
                 }
             } else {
+                JButton buy = new JButton("Purchase");
                 JButton cart = new JButton();
                 Icon icon = new ImageIcon("pics\\minecart.png");
                 cart.setIcon(icon);
@@ -397,6 +398,8 @@ public class StoreWindow extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         pp.set(s.getCart());
+                        if (s.getCart() != null && s.getCart().size() > 0) buy.setEnabled(true);
+                        else buy.setEnabled(false);
                     }
                 });
                 //Localization of button "Add to cart"
@@ -411,7 +414,6 @@ public class StoreWindow extends JFrame {
                     c.weighty = 0.4;
                 }
                 add(cart, c);
-                JButton buy = new JButton("Purchase");
                 buttonAppearanceSetting(buy);
                 if (s.getCart().size() == 0) buy.setEnabled(false);
                 buy.addActionListener(new ActionListener() {
@@ -420,6 +422,7 @@ public class StoreWindow extends JFrame {
                         int response = JOptionPane.showConfirmDialog(null, "Products: " + s.getCart().size() + "\nTotal price: " + s.cartPrice() + " ol'mazi\nWant to purchase?");
                         if (response == JOptionPane.YES_OPTION) {
                             s.purchase();
+                            buy.setEnabled(false);
                             pp.set(s.getCart());
                         }
                     }
@@ -451,7 +454,7 @@ public class StoreWindow extends JFrame {
                     pp.set(null);
                 }
             });
-            //Localization of button "Add to cart"
+            //Localization of button "Lod in"
             {
                 c.anchor = GridBagConstraints.CENTER;
                 c.fill = GridBagConstraints.BOTH;
