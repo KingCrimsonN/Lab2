@@ -78,7 +78,7 @@ public class ProductWindow extends JFrame {
             c.gridwidth = 1;
             c.gridx = 1;
             c.gridy = 0;
-            c.weightx = 0.25;
+                        c.weighty = 0.1;
             c.insets = new Insets(0, 10, 0, 0);
         }
         this.add(nameF, c);
@@ -178,7 +178,7 @@ public class ProductWindow extends JFrame {
             {
                 c.anchor = GridBagConstraints.CENTER;
                 c.fill = GridBagConstraints.NONE;
-                c.gridheight = 3;
+                c.gridheight = 4;
                 c.gridwidth = 1;
                 c.gridx = 2;
                 c.gridy = 0;
@@ -210,8 +210,10 @@ public class ProductWindow extends JFrame {
                             return;
                         }
                     }
-                    StoreWindow.s.addToCart(new Product(current.getName(), current.getPrice(), (Integer) number.getValue(), dep, current.getImage(), description.getText()));
-                    dispose();
+                    if ((Integer) number.getValue() != 0) {
+                        StoreWindow.s.addToCart(new Product(current.getName(), current.getPrice(), (Integer) number.getValue(), dep, current.getImage(), description.getText()));
+                        dispose();
+                    }else JOptionPane.showMessageDialog(null, "Enter amount", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
@@ -293,7 +295,6 @@ public class ProductWindow extends JFrame {
         number.setPreferredSize(new Dimension(100, 30));
         number.setMaximumSize(new Dimension(100, 30));
         number.addChangeListener(new ChangeListener() {
-
             @Override
             public void stateChanged(ChangeEvent e) {
                 total.setText("" + Integer.valueOf(price.getText()) * (Integer) number.getValue());
@@ -327,6 +328,7 @@ public class ProductWindow extends JFrame {
             c.weighty = 0.1;
         }
         this.add(text, c);
+        total.setText("" + Integer.valueOf(price.getText()) * (Integer) number.getValue());
         total.setFont(font);
         total.setBackground(darkgray);
         total.setForeground(white);

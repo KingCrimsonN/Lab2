@@ -16,7 +16,11 @@ public class ProductButton extends JButton {
         this.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ProductWindow prw = new ProductWindow(p.getName(), admin, false, p);
+                if (p.getAmount() == 0 && !StoreWindow.isAdmin())
+                    JOptionPane.showMessageDialog(null, "Sorry.. Product is not available now..", "Info", JOptionPane.PLAIN_MESSAGE);
+                else {
+                    ProductWindow prw = new ProductWindow(p.getName(), admin, false, p);
+                }
             }
         });
     }

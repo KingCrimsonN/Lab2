@@ -14,6 +14,11 @@ public class StoreWindow extends JFrame {
     }
 
     private static Department current;
+
+    public static boolean isAdmin() {
+        return admin;
+    }
+
     private static boolean admin = true;
     static Store s = FileInput.readConfig("config.ttt");
     private Font font;
@@ -171,12 +176,11 @@ public class StoreWindow extends JFrame {
             super();
             this.setBackground(darkgray);
             this.setLayout(new GridBagLayout());
-
             set();
         }
 
         private void set() {
-            if (sp != null)sp.removeAll();
+            if (sp != null) sp.removeAll();
             GridBagConstraints c = new GridBagConstraints();
             pickDep = new JLabel("Departments");
             pickDep.setFont(font);
@@ -195,6 +199,7 @@ public class StoreWindow extends JFrame {
                 c.weighty = 0.2;
             }
             add(pickDep, c);
+            JButton addP = new JButton("Add new product");
             //setting JComboBox
             department = new JComboBox<Department>();
             for (Department d : s.departments) department.addItem(d);
@@ -209,6 +214,7 @@ public class StoreWindow extends JFrame {
                         current = (Department) department.getSelectedItem();
                         if (current != null)
                             pp.set(current.getProducts());
+                        if (!addP.isEnabled()) addP.setEnabled(true);
                     }
                 }
             });
@@ -226,6 +232,7 @@ public class StoreWindow extends JFrame {
             add(department, c);
             if (admin) {
                 JButton addD = new JButton("Add Department");
+                JButton delD = new JButton("Delete Department");
                 buttonAppearanceSetting(addD);
                 addD.addActionListener(new ActionListener() {
                     @Override
@@ -242,6 +249,8 @@ public class StoreWindow extends JFrame {
                                 department.setEnabled(true);
                                 department.removeItemAt(0);
                             }
+                            if (!addP.isEnabled()) addP.setEnabled(true);
+                            if (!delD.isEnabled()) delD.setEnabled(true);
                         } else JOptionPane.showMessageDialog(null, "Department \"" + name + "\" already exists!");
                     }
                 });
@@ -257,7 +266,6 @@ public class StoreWindow extends JFrame {
                     c.weighty = 0.4;
                 }
                 add(addD, c);
-                JButton delD = new JButton("Delete Department");
                 buttonAppearanceSetting(delD);
                 delD.addActionListener(new ActionListener() {
                     @Override
@@ -273,6 +281,8 @@ public class StoreWindow extends JFrame {
                                 } else {
                                     department.setSelectedItem(null);
                                     department.setEnabled(false);
+                                    addP.setEnabled(false);
+                                    delD.setEnabled(false);
                                     pp.set(null);
                                 }
                             }
@@ -292,7 +302,6 @@ public class StoreWindow extends JFrame {
 //                    c.insets = new Insets(40, 20, 40, 20);
                 }
                 add(delD, c);
-                JButton addP = new JButton("Add new product");
                 buttonAppearanceSetting(addP);
                 addP.addActionListener(new ActionListener() {
                     @Override
@@ -366,6 +375,7 @@ public class StoreWindow extends JFrame {
                     c.insets = new Insets(10, 10, 10, 10);
                 }
                 add(cart, c);
+
             }
             user = new JButton();
             user.setText(admin ? "Log in as User" : "Log in as Admin");
@@ -377,6 +387,7 @@ public class StoreWindow extends JFrame {
                     admin = !admin;
                     user.setText(admin ? "Log in as User" : "Log in as Admin");
                     sp.set();
+                    pp.set(null);
                 }
             });
             //Localization of button "Add to cart"
